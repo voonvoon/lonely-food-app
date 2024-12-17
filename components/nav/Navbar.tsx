@@ -36,7 +36,7 @@ const Navbar = () => {
           </div>
           
 
-          <div className="absolute right-10">
+          {/* <div className="absolute right-10">
             {status === "authenticated" ? (
               <>
                 <Link
@@ -70,7 +70,7 @@ const Navbar = () => {
                 </Link>
               </>
             )}
-          </div>
+          </div> */}
         </div>
       </div>
 
