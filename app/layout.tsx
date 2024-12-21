@@ -2,6 +2,9 @@ import localFont from "next/font/local";
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/nav/Navbar";
+import { SessionProvider } from "next-auth/react";
+import { auth } from "@/auth";
+import { Toaster } from 'react-hot-toast';
 
 
 const geistSans = localFont({
@@ -23,20 +26,23 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
   return (
-    <html lang="en">
-    
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <SessionProvider session={session}>
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <Toaster />
           <Navbar />
-        {children}
-      </body>
-    </html>
+          {children}
+        </body>
+      </html>
+    </SessionProvider>
   );
 }
