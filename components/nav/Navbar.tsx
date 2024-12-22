@@ -99,7 +99,7 @@ const Navbar = () => {
 
       <div
         className={`transition-all duration-1000 ease-in-out ${
-          isMenuOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0 "
+          isMenuOpen ? "max-h-screen opacity-100 visible" : "max-h-0 opacity-0 invisible"
         }`}
       >
         <div className="px-2 pb-1 pt-2 text-center  transition-all duration-300 ease-in-out">

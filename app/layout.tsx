@@ -1,11 +1,14 @@
+"use client";
+
 import localFont from "next/font/local";
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/nav/Navbar";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
 
+import { CategoryProvider } from "@/context/categories";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -18,29 +21,32 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-export const metadata: Metadata = {
-  title: "The Lonely Food App",
-  description: "A food ordering app to satisfy your cravings.",
-    icons: {
-    icon: "/food-logo.svg", // Add this line for the favicon
-  },
-};
+// export const metadata: Metadata = {
+//   title: "The Lonely Food App",
+//   description: "A food ordering app to satisfy your cravings.",
+//     icons: {
+//     icon: "/food-logo.svg", // Add this line for the favicon
+//   },
+// };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session = await auth();
+  //const session = await auth();
   return (
-    <SessionProvider session={session}>
+    // <SessionProvider session={session}>
+    <SessionProvider>
       <html lang="en">
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <Toaster />
-          <Navbar />
-          {children}
+          <CategoryProvider>
+            <Toaster />
+            <Navbar />
+            {children}
+          </CategoryProvider>
         </body>
       </html>
     </SessionProvider>
