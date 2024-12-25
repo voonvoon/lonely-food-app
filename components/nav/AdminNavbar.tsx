@@ -10,9 +10,9 @@ export default function AdminNavbar() {
         Admin
       </Link>
       <Link href="/dashboard/admin/categories" className="px-4 py-2 text-gray-700 hover:text-gray-900">
-        Categoriess
+        Category
       </Link>
-      <Link href="/dashboard/admin/tag" className="px-4 py-2 text-gray-700 hover:text-gray-900">Tags</Link>
+      <Link href="/dashboard/admin/sub-categories" className="px-4 py-2 text-gray-700 hover:text-gray-900">Sub Category</Link>
       <Link href="/dashboard/admin/coupon" className="px-4 py-2 text-gray-700 hover:text-gray-900">Coupon</Link>
       <Link href="/dashboard/admin/orders" className="px-4 py-2 text-gray-700 hover:text-gray-900">Orders</Link>
       <Link href="/dashboard/admin/newproducttest" className="px-4 py-2 text-gray-700 hover:text-gray-900">Add Product</Link>

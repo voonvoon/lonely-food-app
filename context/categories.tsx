@@ -46,9 +46,9 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
         setName("");
         setCategories([data, ...categories]);
       }
-    } catch (err:any) {
-      console.log(err);
-      toast.error(err.message);
+    } catch (error:any) {
+      console.log(error);
+      toast.error(error.message);
     }
   };
 
@@ -131,9 +131,11 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
         );
         setUpdatingCategory(null); // clear state
       }
-    } catch (err) {
+    } catch (err: any) {
       console.log(err);
-      toast.error("An error occureed. Try again please!");
+      //toast.error("An error occureed. Try again please!");
+      //toast.error(err);
+      toast.error(err.message);
     }
   };
 
