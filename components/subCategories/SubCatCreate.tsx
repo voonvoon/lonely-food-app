@@ -16,6 +16,7 @@ export default function SubCatCreate() {
     deleteSubCategory,
     updateSubCategory,
     createSubCategory,
+    pending
   } = useSubCategory();
 
   const { fetchCategories, categories } = useCategory();
@@ -41,13 +42,14 @@ export default function SubCatCreate() {
 
       <div className="flex justify-between mt-4">
         <button
+          disabled={pending}
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
           onClick={(e) => {
             e.preventDefault();
             updatingCat ? updateSubCategory() : createSubCategory();
           }}
         >
-          {updatingCat ? "Update" : "Create"}
+          {pending ? "Loading..." : updatingCat ? "Update" : "Create"}
         </button>
 
         {updatingCat && (
@@ -59,7 +61,7 @@ export default function SubCatCreate() {
                 deleteSubCategory();
               }}
             >
-              Delete
+              {pending ? "Deleting..." : "Delete"}
             </button>
 
             <button

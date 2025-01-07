@@ -25,6 +25,7 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
   // for fetching all categories
   //const [categories, setCategories] = useState([]);
   const [categories, setCategories] = useState<any[]>([]); // Specify the type as any[]
+  const [pending, setPending] = useState(false);
 
   console.log(
     "see categories from useContext==========================>",
@@ -36,6 +37,7 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
   console.log("updatingCategory----------->", updatingCategory);
 
   const createCategory = async (categoryData: Category) => {
+    setPending(true);
     try {
       const data = await createCategoryAction({ name: name });
 
@@ -46,9 +48,11 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
         setName("");
         setCategories([data, ...categories]);
       }
-    } catch (error:any) {
+    } catch (error: any) {
       console.log(error);
       toast.error(error.message);
+    } finally {
+      setPending(false);
     }
   };
 
@@ -88,10 +92,12 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
   //   };
 
   const updateCategory = async () => {
+    setPending(true);
     try {
-      const response = await updateCategoryAction(
-       { id:updatingCategory?.id , name: updatingCategory?.name }
-      );
+      const response = await updateCategoryAction({
+        id: updatingCategory?.id,
+        name: updatingCategory?.name,
+      });
 
       const data = response;
       if (!response) {
@@ -112,10 +118,13 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
     } catch (err) {
       console.log(err);
       toast.error("An error occureed. Try again please!");
+    }finally {
+      setPending(false);
     }
   };
 
   const deleteCategory = async () => {
+    setPending(true);
     try {
       const response = await deleteCategoryAction(updatingCategory?.id);
 
@@ -136,6 +145,8 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
       //toast.error("An error occureed. Try again please!");
       //toast.error(err);
       toast.error(err.message);
+    } finally {
+      setPending(false);
     }
   };
 
@@ -151,7 +162,8 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
         createCategory,
         fetchCategories,
         deleteCategory,
-        updateCategory
+        updateCategory,
+        pending
       }}
     >
       {children}

@@ -94,16 +94,14 @@ model Authenticator {
 }
 
 model Category {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  name      String   @db.String
-  slug      String   @unique @db.String
-  createdAt DateTime @default(now()) @map("createdAt")
-  updatedAt DateTime @updatedAt @map("updatedAt")
-
-  subCategories  SubCategory[] @relation("CategoryToSubCategory")
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
+  name          String        @db.String
+  slug          String        @unique @db.String
+  createdAt     DateTime      @default(now()) @map("createdAt")
+  updatedAt     DateTime      @updatedAt @map("updatedAt")
+  subCategories SubCategory[] @relation("CategoryToSubCategory")
+  item          Item[]        @relation("CategoryToItem")
 }
-
-
 
 model SubCategory {
   id             String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -114,8 +112,56 @@ model SubCategory {
   updatedAt      DateTime @updatedAt @map("updatedAt")
 
   parent Category @relation(fields: [parentCategory], references: [id], name: "CategoryToSubCategory")
+
+  Item Item[] @relation(name: "subCategoryToItem")
+
   //in Prisma, the parent is just a name for the relation field. You can name it anything that makes sense for your 
   //data model. The important parts are the @relation directive and its parameters, which define how the relation works.
 
   @@index([slug])
+}
+
+model Image {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  name String
+  data Bytes
+}
+
+model Item {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  title       String  @unique
+  slug        String
+  description String
+  price       Float?
+  available   Boolean @default(true)
+
+  newSubCategory Json
+
+  category    String?   @db.ObjectId
+  categoryRef Category? @relation(fields: [category], references: [id], name: "CategoryToItem")
+
+  //due to i failed to populate the subCategoryRef, i use newSubCAtgory to store the subCategory with id and name.it is a json type. i will come back to this later
+  subCategory    String[]     @db.ObjectId
+  subCategoryRef SubCategory? @relation(fields: [subCategory], references: [id], name: "subCategoryToItem")
+
+  //images String[] @db.ObjectId
+  images Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Test_one {
+  id   String     @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+  test Test_two[]
+}
+
+model Test_two {
+  id   String @id @default(auto()) @map("_id") @db.ObjectId
+  name String
+
+  testId  String   @db.ObjectId
+  testOne Test_one @relation(fields: [testId], references: [id])
 }

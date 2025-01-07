@@ -6,6 +6,7 @@ import {
   getSubCategoriesAction,
   updateSubCategoryAction,
 } from "@/actions/subCategories";
+import { set } from "mongoose";
 
 import { createContext, useState, useContext, ReactNode } from "react";
 import toast from "react-hot-toast";
@@ -24,8 +25,10 @@ export const SubCategoryProvider: React.FC<SubCategoryProviderProps> = ({
   const [subCats, setSubCats] = useState<any[]>([]);
   const [updatingCat, setUpdatingCat] = useState<any>(null); // user selected existing tag
   const [refresh, setRefresh] = useState(false); // added by me to refresh show taglist after create/update
+  const [pending, setPending] = useState(false);
 
   const createSubCategory = async () => {
+    setPending(true);
     try {
       const data = await createSubCategoryAction({
         name: name,
@@ -47,6 +50,8 @@ export const SubCategoryProvider: React.FC<SubCategoryProviderProps> = ({
     } catch (err: any) {
       console.log(err);
       toast.error(err.message);
+    } finally {
+      setPending(false);
     }
   };
 
@@ -67,6 +72,7 @@ export const SubCategoryProvider: React.FC<SubCategoryProviderProps> = ({
 
   //delete a subCategory
   const deleteSubCategory = async () => {
+    setPending(true);
     try {
       const data = await deleteSubCategoryAction(updatingCat.id);
       if (!data) {
@@ -79,11 +85,14 @@ export const SubCategoryProvider: React.FC<SubCategoryProviderProps> = ({
     } catch (err: any) {
       console.log(err);
       toast.error(err.message);
-    }
+    } finally {
+      setPending(false);
+    } 
   };
 
   //update a subCategory
   const updateSubCategory = async () => {
+    setPending(true);
     try {
       const data = await updateSubCategoryAction({
         id: updatingCat.id,
@@ -102,7 +111,9 @@ export const SubCategoryProvider: React.FC<SubCategoryProviderProps> = ({
     } catch (err: any) {
       console.log(err);
       toast.error(err.message);
-    }
+    } finally {
+      setPending(false);
+    } 
   };
 
   return (
@@ -121,6 +132,7 @@ export const SubCategoryProvider: React.FC<SubCategoryProviderProps> = ({
         fetchSubCategories,
         deleteSubCategory,
         updateSubCategory,
+        pending
       }}
     >
       {children}
