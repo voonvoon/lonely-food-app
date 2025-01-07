@@ -54,7 +54,7 @@ export default function CreateItem() {
   const { fetchSubCategories, subCats } = useSubCategory();
 
   //testing
-  const tempItemId = "677ba0f60798b434604c1c20";
+  const tempItemId = "677a59a5bc4ce376520be6ff";
 
   useEffect(() => {
     fetchCategories();
