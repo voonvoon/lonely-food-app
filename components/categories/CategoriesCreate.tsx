@@ -2,7 +2,9 @@
 
 import { useCategory } from "@/context/categories";
 
+
 export default function CategoryCreate() {
+  
   //context
 
   const {
@@ -13,6 +15,7 @@ export default function CategoryCreate() {
     setUpdatingCategory,
     createCategory,
     deleteCategory,
+    pending
   } = useCategory();
 
   return (
@@ -30,19 +33,25 @@ export default function CategoryCreate() {
       />
       <div className="flex justify-between mt-4">
         <button
+          disabled={pending}
           //onClick={createCategory}
           onClick={updatingCategory ? updateCategory : createCategory}
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
         >
-          {updatingCategory ? "Update Category" : "Create Category"}
+          {pending
+            ? "Loading..."
+            : updatingCategory
+            ? "Update Category"
+            : "Create Category"}
         </button>
         {updatingCategory && (
           <>
             <button
+              disabled={pending}
               onClick={deleteCategory}
               className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
             >
-              Delete Category
+              {pending ? "Loading..." : " Delete Category"}
             </button>
 
             <button

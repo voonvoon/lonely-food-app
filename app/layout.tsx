@@ -10,6 +10,7 @@ import { Toaster } from "react-hot-toast";
 
 import { CategoryProvider } from "@/context/categories";
 import { SubCategoryProvider } from "@/context/subCategories";
+import { ItemProvider } from "@/context/createItem";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -43,13 +44,15 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <CategoryProvider>
-            <SubCategoryProvider>
-            <Toaster />
-            <Navbar />
-            {children}
-            </SubCategoryProvider>
-          </CategoryProvider>
+          <ItemProvider>
+            <CategoryProvider>
+              <SubCategoryProvider>
+                <Toaster />
+                <Navbar />
+                {children}
+              </SubCategoryProvider>
+            </CategoryProvider>
+          </ItemProvider>
         </body>
       </html>
     </SessionProvider>
