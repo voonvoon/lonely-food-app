@@ -6,6 +6,7 @@ export default function AdminDashboard() {
             Admin Dashboard
           </h1>
           <hr className="border-gray-300 my-4 mb-12" />
+          This is the admin Dashboard
         </div>
       </div>
     );
