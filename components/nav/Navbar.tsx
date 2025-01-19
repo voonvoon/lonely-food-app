@@ -31,7 +31,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-red-400">
+    <nav className="bg-red-300">
       <div className="mx-auto px-4">
         <div className="relative flex h-16 items-center justify-between">
           <div className="flex items-center justify-start">
@@ -42,10 +42,10 @@ const Navbar = () => {
                 <div className="flex items-center justify-center"> </div>
               </Link>
             </div>
-            <Link href="/test-middleware" className="m-4">
+            {/* <Link href="/test-middleware" className="m-4">
               middleware
             </Link>
-            <Link href="/test-server">server</Link>
+            <Link href="/test-server">server</Link> */}
           </div>
 
           <div className="absolute right-0 flex items-center ">

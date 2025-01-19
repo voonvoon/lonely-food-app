@@ -1,13 +1,18 @@
 "use client";
-import { createContext, useState, useContext, ReactNode } from "react";
+import {
+  createContext,
+  useState,
+  useEffect,
+  useContext,
+  ReactNode,
+} from "react";
 import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 import {
   createItemAction,
   deleteImageAction,
   fetchItemsAction,
-  fetchSingleItemAction,
-  updateItemAction,
-  deleteItemAction,
+  testing123,
 } from "@/actions/createItem";
 import Resizer from "react-image-file-resizer";
 import { Buffer } from "buffer";
@@ -38,6 +43,7 @@ export const ItemProvider: React.FC<ItemProviderProps> = ({ children }) => {
   const [item, setItem] = useState<any>(null);
   const [items, setItems] = useState<any[]>([]);
   const [updatingItem, setUpdatingItem] = useState<any>(null);
+  const [uploading, setUploading] = useState(false);
   const [uploadedImagesShow, setUploadedImagesShow] = useState([]) as any;
 
   const createProduct = async (itemData: any) => {
@@ -50,6 +56,8 @@ export const ItemProvider: React.FC<ItemProviderProps> = ({ children }) => {
         toast.success("item created🙂.");
         setItem(null);
         window.location.reload();
+
+        //setCategories([data, ...categories]);
       }
     } catch (error: any) {
       console.log(error);
@@ -62,7 +70,9 @@ export const ItemProvider: React.FC<ItemProviderProps> = ({ children }) => {
   //fetch all items
   const fetchItems = async () => {
     try {
+      //const data = await fetchItemsAction();
       const data = await fetchItemsAction();
+      //console.log("data testing123------------------------->>", data);
       if (!data) {
         toast.error("Failed to fetch items");
       } else {
@@ -77,6 +87,8 @@ export const ItemProvider: React.FC<ItemProviderProps> = ({ children }) => {
   };
 
   async function uploadImages(images: FileList) {
+    //const uploadedImages: any = [];
+
     //nested ternally
     let uploadedImages = updatingItem // if have 'updatingProduct'
       ? updatingItem?.images || [] // grab that img or [empty]
@@ -84,19 +96,25 @@ export const ItemProvider: React.FC<ItemProviderProps> = ({ children }) => {
       ? item?.images || [] //grab that img or [empty]
       : []; //else just [empyt]
 
+
+
     if (images) {
-      //check if total combinedAA img 4+?
+      //check if total combined img 4+?
       const totalImages = uploadedImages?.length + images?.length;
       if (totalImages > 3) {
         toast.error("You can upload maximum 3 images only");
-        //if i only 'return' it will return empty array, my photos preview will be empty, so return uploadedImages here
+         //if i only 'return' it will return empty array, my photos preview will be empty, so return uploadedImages here
         return uploadedImages;
       }
+      
     }
 
     //limit image size to 2MB
     const maxSizeMB = 2; // Set the maximum size limit in MB
     const maxSizeBytes = maxSizeMB * 1024 * 1024; // Convert MB to bytes
+
+    //console.log('Uploading images---------->:', images);
+    //console.log("uploadedImages---------->:", uploadedImages);
 
     for (let i = 0; i < images.length; i++) {
       const image = images[i];
@@ -141,6 +159,7 @@ export const ItemProvider: React.FC<ItemProviderProps> = ({ children }) => {
       if (response.success) {
         if (response.image) {
           const imageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/get-image?id=${response.image.id}`;
+          //uploadedImages.push({ ...response.image, url: imageUrl });
           uploadedImages.push({
             id: response.image.id,
             name: imageName,
@@ -150,19 +169,6 @@ export const ItemProvider: React.FC<ItemProviderProps> = ({ children }) => {
             ...prevItem,
             images: uploadedImages,
           }));
-          toast.success("Image uploaded successfully");
-          //auto save if user add more photo when updating item to avoid db inconsistency between item and images
-          if (updatingItem) {
-            const updatedItem = {
-              ...updatingItem,
-              images: uploadedImages,
-            };
-            setUpdatingItem(updatedItem);
-            const autoUpdate = await updateItemAction(updatedItem);
-            if (autoUpdate) {
-              toast.success("Item auto save successfully.");
-            }
-          }
         } else {
           console.error("Image data is undefined");
         }
@@ -183,85 +189,14 @@ export const ItemProvider: React.FC<ItemProviderProps> = ({ children }) => {
         toast.error("Failed to delete image");
       } else {
         toast.success("Image deleted successfully");
-         //auto save if user delete photo when updating item to avoid db inconsistency between item and images
-        if (updatingItem) {
-          const updatedItem = {
-            ...updatingItem,
-            images: updatingItem.images.filter(
-              (img: any) => img.id !== imageId
-            ),
-          };
-          setUpdatingItem(updatedItem);
-          const autoUpdate = await updateItemAction(updatedItem);
-          if (autoUpdate) {
-            toast.success("Item auto save successfully.");
-          }
-        } else if (item) {
-          setItem((prevItem: any) => ({
-            ...prevItem,
-            images: prevItem.images.filter((img: any) => img.id !== imageId),
-          }));
-        }
+        setItem((prevItem: any) => ({
+          ...prevItem,
+          images: prevItem.images.filter((img: any) => img.id !== imageId),
+        }));
         //reflect latest photo in uploadedImages
         setUploadedImagesShow((prevImages: any) =>
           prevImages.filter((img: any) => img.id !== imageId)
         );
-      }
-    } catch (error: any) {
-      console.log(error);
-      toast.error(error.message);
-    } finally {
-      setPending(false);
-    }
-  };
-
-  //fetch single item
-  const fetchSingleItem = async (id: string) => {
-    try {
-      const data = await fetchSingleItemAction(id);
-      if (!data) {
-        toast.error("Failed to fetch item");
-      } else {
-        setUpdatingItem(data);
-        setUploadedImagesShow(data.images);
-      }
-    } catch (error: any) {
-      console.log(error);
-      toast.error(error.message);
-    } finally {
-      setPending(false);
-    }
-  };
-
-  //update item
-  const updateProduct = async () => {
-    try {
-      const data = await updateItemAction(updatingItem);
-      if (!data) {
-        toast.error("Failed to update item");
-      } else {
-        toast.success("Item updated successfully");
-        setItem(null);
-        window.location.reload();
-      }
-    } catch (error: any) {
-      console.log(error);
-      toast.error(error.message);
-    } finally {
-      setPending(false);
-    }
-  };
-
-  //delete item
-  const deleteItem = async (id: string) => {
-    try {
-      const data = await deleteItemAction(id);
-      if (!data) {
-        toast.error("Failed to delete item");
-      } else {
-        toast.success("Item deleted successfully");
-        setUpdatingItem(null);
-        setUploadedImagesShow(null);
       }
     } catch (error: any) {
       console.log(error);
@@ -288,9 +223,6 @@ export const ItemProvider: React.FC<ItemProviderProps> = ({ children }) => {
         deleteImage,
         uploadedImagesShow,
         setUploadedImagesShow,
-        fetchSingleItem,
-        updateProduct,
-        deleteItem,
       }}
     >
       {children}

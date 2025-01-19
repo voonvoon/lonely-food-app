@@ -27,6 +27,8 @@ export const SubCategoryProvider: React.FC<SubCategoryProviderProps> = ({
   const [refresh, setRefresh] = useState(false); // added by me to refresh show taglist after create/update
   const [pending, setPending] = useState(false);
 
+  console.log("subCats from context------------------------------------>", subCats);
+
   const createSubCategory = async () => {
     setPending(true);
     try {
