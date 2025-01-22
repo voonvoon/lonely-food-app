@@ -12,6 +12,8 @@ import { CategoryProvider } from "@/context/categories";
 import { SubCategoryProvider } from "@/context/subCategories";
 import { ItemProvider } from "@/context/createItem";
 import { MenuProvider } from "@/context/menu";
+import { OrderProvider } from "@/context/order";
+import { useContext } from "react";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -38,6 +40,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   //const session = await auth();
+
   return (
     // <SessionProvider session={session}>
     <SessionProvider>
@@ -45,17 +48,19 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <MenuProvider>
-            <ItemProvider>
-              <CategoryProvider>
-                <SubCategoryProvider>
-                  <Toaster />
-                  <Navbar />
-                  {children}
-                </SubCategoryProvider>
-              </CategoryProvider>
-            </ItemProvider>
-          </MenuProvider>
+          <OrderProvider>
+            <MenuProvider>
+              <ItemProvider>
+                <CategoryProvider>
+                  <SubCategoryProvider>
+                    <Toaster />
+                    <Navbar />
+                    {children}
+                  </SubCategoryProvider>
+                </CategoryProvider>
+              </ItemProvider>
+            </MenuProvider>
+          </OrderProvider>
         </body>
       </html>
     </SessionProvider>

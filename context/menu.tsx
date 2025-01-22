@@ -1,6 +1,6 @@
 "use Client";
 import { createContext, useState, useContext, ReactNode } from "react";
-import { fetchAllItemAction, fetchAllCategoryAction } from "@/actions/item";
+import { fetchAllItemAction, fetchAllCategoryAction, fetchSingleItemAction } from "@/actions/item";
 import toast from "react-hot-toast";
 
 export const MenuContext = createContext<any>(undefined); //<any> indicating the context can hold any type of value.
@@ -40,6 +40,23 @@ export const MenuProvider: React.FC<MenuProviderProps> = ({ children }) => {
     }
   };
 
+//fetch single item by id
+  const fetchSingleItem = async (id: string) => {
+    try {
+      const response = await fetchSingleItemAction(id);
+      if (!response) {
+        throw new Error("Failed to fetch item");
+      }
+      return response;
+    } catch (error) {
+      console.error("Error fetching item:", error);
+      throw new Error("Could not fetch item");
+    }
+
+  }
+ 
+
+
   return (
     <MenuContext.Provider
       value={{
@@ -47,6 +64,7 @@ export const MenuProvider: React.FC<MenuProviderProps> = ({ children }) => {
         fetchAllCategory,
         categories,
         setCategories,
+        fetchSingleItem
       }}
     >
       {children}

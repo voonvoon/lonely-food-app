@@ -13,10 +13,13 @@ import "react-loading-skeleton/dist/skeleton.css";
 import { useContext } from "react";
 import { MenuContext } from "@/context/menu";
 import ItemCard from "@/components/items/ItemCard";
+import Link from "next/link";
+
 
 export default function MenuPage() {
   const { fetchAllItem, categories } = useContext(MenuContext);
   const [items, setItems] = useState([]) as any;
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -134,7 +137,9 @@ export default function MenuPage() {
 
   return (
     <div className="bg-white shadow-md rounded-lg min-h-screen flex flex-col">
-      <h1 className="text-lg font-semibold mt-3 mb-2 text-center underline">Main menu</h1>
+      <h1 className="text-lg font-semibold mt-3 mb-2 text-center underline">
+        Main menu
+      </h1>
       {/* <hr className="border-gray-300 my-4 mb-12" /> */}
       <div
         //grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 overflow-y-auto
@@ -167,13 +172,15 @@ export default function MenuPage() {
                       </h3>
                       <div className="flex flex-wrap gap-2 w-full">
                         {subCategory.items.map((item: any) => (
-                          <ItemCard
-                            key={item.id}
-                            images={item.images}
-                            title={item.title}
-                            description={item.description}
-                            price={item.price}
-                          />
+                           <Link href={`/item-page?id=${item.id}`} key={item.id}>
+                            <ItemCard
+                              key={item.id}
+                              images={item.images}
+                              title={item.title}
+                              description={item.description}
+                              price={item.price}
+                            />
+                          </Link>
                         ))}
                       </div>
                     </div>

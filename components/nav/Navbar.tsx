@@ -1,18 +1,23 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { OrderContext } from "@/context/order";
 import Link from "next/link";
 import { GiFoodTruck } from "react-icons/gi";
 import { IoMenu } from "react-icons/io5";
 import { auth } from "@/auth";
 //import Logout from "../Logout";
 import { useSession, signOut } from "next-auth/react";
+import Sidebar from "./SideBar";
 
 //import { auth } from "@/auth";
 
 const Navbar = () => {
   const { data, status, update } = useSession();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const { cartItems, isSidebarOpen, setIsSidebarOpen } =
+    useContext(OrderContext);
 
   // Update the login status when the login status changes
   useEffect(() => {
@@ -31,7 +36,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-red-300">
+    <nav className="bg-gray-800">
       <div className="mx-auto px-4">
         <div className="relative flex h-16 items-center justify-between">
           <div className="flex items-center justify-start">
@@ -67,7 +72,7 @@ const Navbar = () => {
                   //href={`/dashboard`}
                   className="rounded-md px-1 py-2 text-sm  text-gray-300 hover:bg-red-400 hover:text-white"
                 >
-                  {user?.name ? user.name : user?.email} 
+                  {user?.name ? user.name : user?.email}
                 </Link>
 
                 <button
@@ -99,10 +104,18 @@ const Navbar = () => {
 
       <div
         className={`transition-all duration-1000 ease-in-out ${
-          isMenuOpen ? "max-h-screen opacity-100 visible" : "max-h-0 opacity-0 invisible"
+          isMenuOpen
+            ? "max-h-screen opacity-100 visible"
+            : "max-h-0 opacity-0 invisible"
         }`}
       >
         <div className="px-2 pb-1 pt-2 text-center  transition-all duration-300 ease-in-out">
+          <button
+            className="block w-full rounded-md px-3 py-2 text-sm text-gray-300 hover:bg-red-500 hover:text-white"
+            onClick={() => setIsSidebarOpen(true)}
+          >
+            Cart
+          </button>
           <Link
             href="/product"
             className="block rounded-md px-3 py-2 text-sm  text-gray-300 hover:bg-red-500 hover:text-white"
@@ -117,6 +130,8 @@ const Navbar = () => {
           </Link>
         </div>
       </div>
+
+      <Sidebar />
     </nav>
   );
 };

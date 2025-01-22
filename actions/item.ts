@@ -12,6 +12,7 @@ export async function fetchAllItemAction() {
     }
 }
 
+//i forgot why i added this function, now i think i already have this in category.ts
 //fetch all category
 export async function fetchAllCategoryAction() {
     try {
@@ -19,5 +20,19 @@ export async function fetchAllCategoryAction() {
     } catch (error) {
         console.error("Error fetching categories:", error);
         throw new Error("Could not fetch categories");
+    }
+}
+
+//fetch single item by id
+export async function fetchSingleItemAction(id: string) {
+    try {
+        return await db.item.findUnique({
+            where: {
+                id,
+            },
+        });
+    } catch (error) {
+        console.error("Error fetching item:", error);
+        throw new Error("Could not fetch item");
     }
 }
