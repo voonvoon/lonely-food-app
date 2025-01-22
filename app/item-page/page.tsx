@@ -72,12 +72,18 @@ export default function MenuPage() {
   };
 
   if (!id) {
-    return <div className="text-center text-gray-500">Loading...</div>;
+    return (
+      <Suspense fallback={<div>Loading...</div>}>
+        <div className="text-center text-gray-500">Loading...</div>
+      </Suspense>
+    );
   }
 
   if (!item) {
     return (
-      <div className="text-center text-gray-500">Loading item details...</div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <div className="text-center text-gray-500">Loading item details...</div>
+      </Suspense>
     );
   }
 
