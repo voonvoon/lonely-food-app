@@ -72,19 +72,21 @@ export default function MenuPage() {
   };
 
   if (!id) {
-    return (
-      <Suspense fallback={<div>Loading...</div>}>
-        <div className="text-center text-gray-500">Loading...</div>
-      </Suspense>
-    );
+    return;
+    // return (
+    //   <Suspense fallback={<div>Loading...</div>}>
+    //     <div className="text-center text-gray-500">Loading...</div>
+    //   </Suspense>
+    // );
   }
 
   if (!item) {
-    return (
-      <Suspense fallback={<div>Loading...</div>}>
-        <div className="text-center text-gray-500">Loading item details...</div>
-      </Suspense>
-    );
+    return;
+    // return (
+    //   <Suspense fallback={<div>Loading...</div>}>
+    //     <div className="text-center text-gray-500">Loading item details...</div>
+    //   </Suspense>
+    // );
   }
 
   return (
