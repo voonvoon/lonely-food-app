@@ -1,3 +1,7 @@
+//The issue is that useSearchParams should be wrapped in a Suspense boundary, 
+// but wrapping the entire return statement in Suspense is not the correct approach. Instead,
+//  you should wrap the component that uses useSearchParams in a Suspense boundary.
+
 "use client";
 import { Suspense, useEffect, useState, useContext } from "react";
 
@@ -9,7 +13,7 @@ import Image from "next/image";
 import PhotoSlideShow from "@/components/items/PhotoSlideShow";
 import QuantitySelector from "@/components/items/QuantitySelector";
 
-export default function MenuPage() {
+function MenuPageContent() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const { cartItems, setCartItems, isSidebarOpen, setIsSidebarOpen } =
@@ -72,65 +76,63 @@ export default function MenuPage() {
   };
 
   if (!id) {
-    return;
-    // return (
-    //   <Suspense fallback={<div>Loading...</div>}>
-    //     <div className="text-center text-gray-500">Loading...</div>
-    //   </Suspense>
-    // );
+    return <div className="text-center text-gray-500">Loading...</div>;
   }
 
   if (!item) {
-    return;
-    // return (
-    //   <Suspense fallback={<div>Loading...</div>}>
-    //     <div className="text-center text-gray-500">Loading item details...</div>
-    //   </Suspense>
-    // );
+    return (
+      <div className="text-center text-gray-500">Loading item details...</div>
+    );
   }
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <div className="p-4 max-w-2xl mx-auto flex flex-col items-center">
-        {item.images.length > 1 ? (
-          <PhotoSlideShow images={item.images} item={item} />
-        ) : (
-          <Image
-            className="w-full h-auto mb-4 rounded"
-            src={item.images[0].url}
-            alt={item.title}
-            width={500}
-            height={300}
-          />
-        )}
-        <QuantitySelector quantity={quantity} setQuantity={setQuantity} />
+    <div className="p-4 max-w-2xl mx-auto flex flex-col items-center">
+      {item.images.length > 1 ? (
+        <PhotoSlideShow images={item.images} item={item} />
+      ) : (
+        <Image
+          className="w-full h-auto mb-4 rounded"
+          src={item.images[0].url}
+          alt={item.title}
+          width={500}
+          height={300}
+        />
+      )}
+      <QuantitySelector quantity={quantity} setQuantity={setQuantity} />
 
-        <button
-          onClick={handleAddItem}
-          className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
-        >
-          Add Item
-        </button>
-        <p className="text-gray-700 mt-16 mb-4">{item.description}</p>
-        <p className="text-lg font-semibold mb-2">
-          <strong>Price:</strong> ${item.price}
-        </p>
-        <p className="text-lg font-semibold mb-2">
-          <strong>Category:</strong> {item.newSubCategory[0]?.name || "N/A"}
-        </p>
-        <p className="text-lg font-semibold mb-2">
-          <strong>Availability:</strong>{" "}
-          {item.available ? "In Stock" : "Out of Stock"}
-        </p>
-        <p className="text-sm text-gray-500 mb-2">
-          <strong>Created At:</strong>{" "}
-          {new Date(item.createdAt).toLocaleDateString()}
-        </p>
-        <p className="text-sm text-gray-500">
-          <strong>Updated At:</strong>{" "}
-          {new Date(item.updatedAt).toLocaleDateString()}
-        </p>
-      </div>
+      <button
+        onClick={handleAddItem}
+        className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
+      >
+        Add Item
+      </button>
+      <p className="text-gray-700 mt-16 mb-4">{item.description}</p>
+      <p className="text-lg font-semibold mb-2">
+        <strong>Price:</strong> ${item.price}
+      </p>
+      <p className="text-lg font-semibold mb-2">
+        <strong>Category:</strong> {item.newSubCategory[0]?.name || "N/A"}
+      </p>
+      <p className="text-lg font-semibold mb-2">
+        <strong>Availability:</strong>{" "}
+        {item.available ? "In Stock" : "Out of Stock"}
+      </p>
+      <p className="text-sm text-gray-500 mb-2">
+        <strong>Created At:</strong>{" "}
+        {new Date(item.createdAt).toLocaleDateString()}
+      </p>
+      <p className="text-sm text-gray-500">
+        <strong>Updated At:</strong>{" "}
+        {new Date(item.updatedAt).toLocaleDateString()}
+      </p>
+    </div>
+  );
+}
+
+export default function MenuPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <MenuPageContent />
     </Suspense>
   );
 }
