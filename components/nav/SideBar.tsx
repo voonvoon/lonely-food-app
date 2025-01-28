@@ -115,9 +115,5 @@ const Sidebar: React.FC = () => {
   );
 };
 
-//next:
-//1.btn confirm order
-//function to handle order: save in db,clear cart, localstorage
-//shema for order
-//server fuction to handle order
+
 export default Sidebar;
