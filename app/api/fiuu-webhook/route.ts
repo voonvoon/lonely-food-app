@@ -1,12 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 import CryptoJS from "crypto-js";
+import querystring from "querystring";
 
 export async function POST(req: NextRequest) {
     const sec_key = "428356ca6c81dfbfa2181bcdc1def2f6"; // Replace xxxxxxxxxx with Secret_Key
 
     try {
-        const data = await req.json();
+        // const data = await req.json();
+        // data.treq = 1; // Additional parameter for IPN. Value always set to 1.
+
+        let data;
+        const contentType = req.headers.get("content-type");
+
+        if (contentType === "application/x-www-form-urlencoded") {
+            const text = await req.text();
+            data = querystring.parse(text);
+        } else {
+            data = await req.json();
+        }
+
         data.treq = 1; // Additional parameter for IPN. Value always set to 1.
+
 
         let {
             nbcb, tranID, orderid, status, domain, amount, currency, appcode, paydate, skey
