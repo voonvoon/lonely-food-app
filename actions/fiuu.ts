@@ -14,12 +14,12 @@ const getMD5HashData = (data: string) => {
 export const createPaymentLinkGet = async (): Promise<string> => {
   const data = {
     merchant_id: merchantID,
-    amount: "4.99",
-    orderid: "DEMO5199",
+    amount: "4.35",
+    orderid: "DEMO5123",
     bill_name: "peter wong",
     bill_email: "wonghv@gmail.com",
     bill_mobile: "+0166307168",
-    bill_desc: "success!",
+    bill_desc: "test webhook!",
     // b_addr1: "1234",
     // b_addr2: "jln 123",
     // b_zipcode: "12345",
@@ -106,12 +106,12 @@ export async function createPaymentData() {
     country?: string;
   } = {
     merchant_id: merchantID,
-    amount: "2.22",
+    amount: "2.90",
     orderid: "DEMO5000",
     bill_name: "Peter Zai",
     bill_email: "wonghv@gmail.com",
     bill_mobile: "+0166307168",
-    bill_desc: "voon is good boy??",
+    bill_desc: "test webhook!",
     b_addr1: "A-16-13a, menara prima avenue",
     b_addr2: "jln 123",
     b_zipcode: "12345",
