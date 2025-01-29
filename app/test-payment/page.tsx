@@ -40,7 +40,7 @@
 
 const CreatePaymentLinkPage = () => {
   const handleCreatePaymentLink = async () => {
-    const data: { [key: string]: string } = await createPaymentData();
+    const data: { [key: string]: string | { [key: string]: string }[] } = await createPaymentData();
     // Create a new form element
     const form = document.createElement('form');
     // Set the form's method to POST
@@ -57,7 +57,7 @@ const CreatePaymentLinkPage = () => {
         const input = document.createElement('input');
         input.type = 'hidden';
         input.name = key;
-        input.value = data[key];
+        input.value = typeof data[key] === 'string' ? data[key] : JSON.stringify(data[key]);
         // Append the input element to the form
         form.appendChild(input);
       }
