@@ -104,21 +104,31 @@ export async function createPaymentData() {
     b_city?: string;
     b_state?: string;
     country?: string;
+    metadata?: { id: string; amount: string; name: string }[];
   } = {
     merchant_id: merchantID,
-    amount: "2.90",
-    orderid: "DEMO5000",
+    amount: "3.88",
+    orderid: "DEMO3388",
     bill_name: "Peter Zai",
     bill_email: "wonghv@gmail.com",
     bill_mobile: "+0166307168",
-    bill_desc: "test webhook!",
+    bill_desc: "gong xi fatt chai!",
     b_addr1: "A-16-13a, menara prima avenue",
     b_addr2: "jln 123",
     b_zipcode: "12345",
     b_city: "KL",
-    b_state:"Selangor",
+    b_state: "Selangor",
     country: "MY",
+    metadata: [
+      { id: "1itemid", amount: "10.00", name: "fish and chips" },
+      { id: "2item1id", amount: "20.50", name: "fried" },
+      { id: "3item1id", amount: "15.75", name: "ice creame" },
+      { id: "4item1id", amount: "30.00", name: "100 plus" },
+      { id: "5item1id", amount: "25.25", name: "cake" }
+    ]
   };
+
+  
 
   const vcode = getMD5HashData(
     `${data.amount}${merchantID}${data.orderid}${vkey}`

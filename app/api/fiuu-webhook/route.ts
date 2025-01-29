@@ -43,10 +43,29 @@ export async function POST(req: NextRequest) {
       status = "-1"; // Invalid transaction
     }
 
+    //this won't log anything
     console.log(
       "Received data before check status------------------------------------------------>>:",
       data
     );
+
+    // {
+    //     nbcb: "2",
+    //     tranID: "30937377",
+    //     orderid: "DEMO3388",
+    //     status: "00",
+    //     error_desc: "",
+    //     error_code: "",
+    //     domain: "SB_pelicanwebdev",
+    //     amount: "3.88",
+    //     currency: "RM",
+    //     appcode: "",
+    //     paydate: "2025-01-29 14:28:30",
+    //     skey: "cb1658912bc7e18e65791666b7c61f65",
+    //     channel: "cimb",
+    //     treq: 1,
+    //   }
+      
 
     if (status === "00") {
       if (checkCartAmount(orderid, amount)) {
