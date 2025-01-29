@@ -107,12 +107,12 @@ export async function createPaymentData() {
     metadata?: { id: string; amount: string; name: string }[];
   } = {
     merchant_id: merchantID,
-    amount: "3.88",
+    amount: "3.77",
     orderid: "DEMO3388",
     bill_name: "Peter Zai",
     bill_email: "wonghv@gmail.com",
     bill_mobile: "+0166307168",
-    bill_desc: "gong xi fatt chai!",
+    bill_desc: "gong xi fatt chai 2!",
     b_addr1: "A-16-13a, menara prima avenue",
     b_addr2: "jln 123",
     b_zipcode: "12345",
