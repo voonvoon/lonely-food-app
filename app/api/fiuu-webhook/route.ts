@@ -29,6 +29,7 @@ export async function POST(req: NextRequest) {
       appcode,
       paydate,
       skey,
+      ExtraP
     } = data;
 
     // Verify the data integrity
@@ -76,6 +77,8 @@ export async function POST(req: NextRequest) {
         "Received data status === 00------------------------------------------------>>:",
         data
       );
+
+      console.log("ExtraP------------------------------------------------>>:", ExtraP);
     } else {
       // Failure action
       console.log("Transaction failed");
