@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     data.treq = 1; // Additional parameter for IPN. Value always set to 1.
 
     // Extract metadata if available
-    const metadata = data.metadata ? JSON.parse(data.metadata) : {};
+    //const metadata = data.metadata ? JSON.parse(data.metadata) : {};
 
     let {
       nbcb,
@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
       appcode,
       paydate,
       skey,
-      extraP = {}, // Ensure extraP is an object
+      extraP, // Ensure extraP is an object
     } = data;
 
     // Ensure extraP is an object
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Include metadata in extraP
-    extraP.metadata = metadata;
+    //extraP.metadata = metadata;
 
     // Verify the data integrity
     const key0 = CryptoJS.MD5(

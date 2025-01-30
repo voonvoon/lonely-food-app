@@ -119,13 +119,13 @@ export async function createPaymentData() {
     b_city: "KL",
     b_state: "Selangor",
     country: "MY",
-    metadata: JSON.stringify([
-      { id: "1itemid", amount: "10.00", name: "fish and chips" },
-      { id: "2item1id", amount: "20.50", name: "fried" },
-      { id: "3item1id", amount: "15.75", name: "ice creame" },
-      { id: "4item1id", amount: "30.00", name: "100 plus" },
-      { id: "5item1id", amount: "25.25", name: "cake" }
-    ])
+    // metadata: JSON.stringify([
+    //   { id: "1itemid", amount: "10.00", name: "fish and chips" },
+    //   { id: "2item1id", amount: "20.50", name: "fried" },
+    //   { id: "3item1id", amount: "15.75", name: "ice creame" },
+    //   { id: "4item1id", amount: "30.00", name: "100 plus" },
+    //   { id: "5item1id", amount: "25.25", name: "cake" }
+    // ])
   };
 
   
