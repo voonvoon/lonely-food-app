@@ -35,6 +35,11 @@ export async function POST(req: NextRequest) {
       extraP = {}, // Ensure extraP is an object
     } = data;
 
+    // Ensure extraP is an object
+    if (typeof extraP === "string") {
+      extraP = JSON.parse(extraP);
+    }
+
     // Include metadata in extraP
     extraP.metadata = metadata;
 
