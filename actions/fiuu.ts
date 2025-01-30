@@ -112,7 +112,7 @@ export async function createPaymentData() {
     bill_name: "Peter Zai",
     bill_email: "wonghv@gmail.com",
     bill_mobile: "+0166307168",
-    bill_desc: "gong xi fatt chai 2!",
+    bill_desc: "gong xi fatt chai 3!",
     b_addr1: "A-16-13a, menara prima avenue",
     b_addr2: "jln 123",
     b_zipcode: "12345",

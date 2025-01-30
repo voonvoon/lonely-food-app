@@ -18,6 +18,9 @@ export async function POST(req: NextRequest) {
 
     data.treq = 1; // Additional parameter for IPN. Value always set to 1.
 
+    // Extract metadata if available
+    const metadata = data.metadata ? JSON.parse(data.metadata) : {};
+
     let {
       nbcb,
       tranID,
@@ -29,8 +32,11 @@ export async function POST(req: NextRequest) {
       appcode,
       paydate,
       skey,
-      ExtraP
+      extraP = {}, // Ensure extraP is an object
     } = data;
+
+    // Include metadata in extraP
+    extraP.metadata = metadata;
 
     // Verify the data integrity
     const key0 = CryptoJS.MD5(
@@ -66,7 +72,6 @@ export async function POST(req: NextRequest) {
     //     channel: "cimb",
     //     treq: 1,
     //   }
-      
 
     if (status === "00") {
       if (checkCartAmount(orderid, amount)) {
@@ -78,7 +83,10 @@ export async function POST(req: NextRequest) {
         data
       );
 
-      console.log("ExtraP------------------------------------------------>>:", ExtraP);
+      console.log(
+        "ExtraP------------------------------------------------>>:",
+        extraP
+      );
     } else {
       // Failure action
       console.log("Transaction failed");
