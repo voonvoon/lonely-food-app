@@ -78,6 +78,9 @@ export async function POST(req: NextRequest) {
     //     treq: 1,
     //   }
 
+    //extraP :
+    //{ ccbrand: 'Visa', cclast4: '1111', cctype: 'Credit', metadata: {} }
+
     if (status === "00") {
       if (checkCartAmount(orderid, amount)) {
         // Write your script here for successful transaction
