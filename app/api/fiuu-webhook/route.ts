@@ -36,7 +36,6 @@ export async function POST(req: NextRequest) {
       extraP, // Ensure extraP is an object
     } = data;
 
-    //const metadata = extraP.metadata || {};
 
     // Ensure extraP is an object
     if (typeof extraP === "string") {
