@@ -9,14 +9,10 @@ export async function POST(req: NextRequest) {
     let data;
     const contentType = req.headers.get("content-type");
 
-    let data2;
 
     if (contentType === "application/x-www-form-urlencoded") {
       const text = await req.text();
       data = querystring.parse(text);
-    } else if (contentType === "application/json-encoded-string") {
-      const text = await req.text();
-      data2 = JSON.parse(text);
     } else {
       data = await req.json();
     }
@@ -24,7 +20,7 @@ export async function POST(req: NextRequest) {
     data.treq = 1; // Additional parameter for IPN. Value always set to 1.
 
     // Extract metadata if available
-    //const metadata = data.metadata ? JSON.parse(data.metadata) : {};
+    const metadata = data.extraP.metadata ? JSON.parse(data.extraP.metadata) : {};
 
     let {
       nbcb,
@@ -40,7 +36,7 @@ export async function POST(req: NextRequest) {
       extraP, // Ensure extraP is an object
     } = data;
 
-    const metadata = data2;
+    //const metadata = extraP.metadata || {};
 
     // Ensure extraP is an object
     if (typeof extraP === "string") {
