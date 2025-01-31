@@ -56,10 +56,10 @@ export async function POST(req: NextRequest) {
     }
 
     //this won't log anything
-    console.log(
-      "Received data before check status------------------------------------------------>>:",
-      data
-    );
+    // console.log(
+    //   "Received data before check status------------------------------------------------>>:",
+    //   data
+    // );
 
     // {
     //     nbcb: "2",
@@ -75,6 +75,7 @@ export async function POST(req: NextRequest) {
     //     paydate: "2025-01-29 14:28:30",
     //     skey: "cb1658912bc7e18e65791666b7c61f65",
     //     channel: "cimb",
+    //     extraP: "{ ccbrand: 'Visa', cclast4: '1111', cctype: 'Credit' }",
     //     treq: 1,
     //   }
 
@@ -91,10 +92,10 @@ export async function POST(req: NextRequest) {
         data
       );
 
-      console.log(
-        "ExtraP------------------------------------------------>>:",
-        extraP
-      );
+      // console.log(
+      //   "ExtraP------------------------------------------------>>:",
+      //   extraP
+      // );
     } else {
       // Failure action
       console.log("Transaction failed");
