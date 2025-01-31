@@ -35,13 +35,17 @@ export async function POST(req: NextRequest) {
       extraP, // Ensure extraP is an object
     } = data;
 
+    const metadata = data.extraP.metadata
+      ? JSON.parse(data.extraP.metadata)
+      : {};
+
     // Ensure extraP is an object
     if (typeof extraP === "string") {
       extraP = JSON.parse(extraP);
     }
 
     // Include metadata in extraP
-    //extraP.metadata = metadata;
+    extraP.metadata = metadata;
 
     // Verify the data integrity
     const key0 = CryptoJS.MD5(
