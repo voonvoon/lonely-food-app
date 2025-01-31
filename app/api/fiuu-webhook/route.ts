@@ -96,7 +96,7 @@ export async function POST(req: NextRequest) {
       }
       console.log(
         "Received data status === 00------------------------------------------------>>:",
-        data2
+        data
       );
 
       // console.log(
