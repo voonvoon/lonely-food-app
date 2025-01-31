@@ -9,9 +9,14 @@ export async function POST(req: NextRequest) {
     let data;
     const contentType = req.headers.get("content-type");
 
+    let data2;
+
     if (contentType === "application/x-www-form-urlencoded") {
       const text = await req.text();
       data = querystring.parse(text);
+    } else if (contentType === "application/json-encoded-string") {
+      const text = await req.text();
+      data2 = JSON.parse(text);
     } else {
       data = await req.json();
     }
@@ -35,9 +40,7 @@ export async function POST(req: NextRequest) {
       extraP, // Ensure extraP is an object
     } = data;
 
-    const metadata = data.extraP.metadata
-      ? JSON.parse(data.extraP.metadata)
-      : {};
+    const metadata = data2;
 
     // Ensure extraP is an object
     if (typeof extraP === "string") {
@@ -93,7 +96,7 @@ export async function POST(req: NextRequest) {
       }
       console.log(
         "Received data status === 00------------------------------------------------>>:",
-        data
+        data2
       );
 
       // console.log(
