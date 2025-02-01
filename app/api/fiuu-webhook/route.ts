@@ -42,7 +42,8 @@ export async function POST(req: NextRequest) {
     //   extraP = JSON.parse(extraP);
     // }
 
-    extraP = JSON.parse(extraP.metadata);
+    //extraP = JSON.parse(extraP);
+    
 
     // Include metadata in extraP
     //extraP.metadata = metadata;
