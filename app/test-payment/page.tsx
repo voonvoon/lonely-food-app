@@ -85,7 +85,7 @@ const CreatePaymentLinkPage = () => {
     const input2 = document.createElement('input');
     input2.type = 'hidden';
     input2.name = "metadata";
-    input2.value = JSON.stringify(metadata)
+    input2.value = metadata as any;
     form.appendChild(input2);
 
     // Log the final data to the console
