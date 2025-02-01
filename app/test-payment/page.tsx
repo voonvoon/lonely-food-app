@@ -49,6 +49,14 @@ const CreatePaymentLinkPage = () => {
   //   { id: "5item1id", amount: "25.25", name: "cake" }
   // ])
 
+  const metadata = [
+    { id: "1itemid", amount: "15.00", name: "fish and chips" },
+    { id: "2item1id", amount: "20.50", name: "fried" },
+    { id: "3item1id", amount: "15.75", name: "ice creame" },
+    { id: "4item1id", amount: "30.00", name: "100 plus" },
+    { id: "5item1id", amount: "25.25", name: "cake" }
+  ]
+
   const handleCreatePaymentLink = async () => {
     
     const data: { [key: string]: string | { [key: string]: string }[] } = await createPaymentData();
@@ -73,6 +81,12 @@ const CreatePaymentLinkPage = () => {
       form.appendChild(input);
       }
     }
+
+    const input2 = document.createElement('input');
+    input2.type = 'hidden';
+    input2.name = "metadata";
+    input2.value = JSON.stringify(metadata)
+    form.appendChild(input2);
 
     // Log the final data to the console
     console.log('Final data--------------------------------------------->:', data);
