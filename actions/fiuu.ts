@@ -106,26 +106,26 @@ export async function createPaymentData() {
     country?: string;
     metadata?: any;
   } = {
-    merchant_id: encodeURIComponent(merchantID),
-    amount: encodeURIComponent("3.77"),
-    orderid: encodeURIComponent("DEMO3388"),
-    bill_name: encodeURIComponent("Peter Zai"),
-    bill_email: encodeURIComponent("wonghv@gmail.com"),
-    bill_mobile: encodeURIComponent("+0166307168"),
-    bill_desc: encodeURIComponent("gong xi fatt chai 8!"),
-    b_addr1: encodeURIComponent("A-16-13a, menara prima avenue"),
-    b_addr2: encodeURIComponent("jln 123"),
-    b_zipcode: encodeURIComponent("12345"),
-    b_city: encodeURIComponent("KL"),
-    b_state: encodeURIComponent("Selangor"),
-    country: encodeURIComponent("MY"),
-    metadata: encodeURIComponent(JSON.stringify([
+    merchant_id: merchantID,
+    amount: "4.98",
+    orderid: "DEMO3030",
+    bill_name: "Peter Zai",
+    bill_email: "wonghv@gmail.com",
+    bill_mobile: "+0166307168",
+    bill_desc: "chor 4 alone!",
+    b_addr1: "A-16-13a, menara prima avenue",
+    b_addr2: "jln 123",
+    b_zipcode: "12345",
+    b_city: "KL",
+    b_state: "Selangor",
+    country: "MY",
+    metadata: JSON.stringify([
       { id: "1itemid", amount: "15.00", name: "fish and chips" },
       { id: "2item1id", amount: "20.50", name: "fried" },
       { id: "3item1id", amount: "15.75", name: "ice creame" },
       { id: "4item1id", amount: "30.00", name: "100 plus" },
       { id: "5item1id", amount: "25.25", name: "cake" }
-    ]))
+    ])
   };
 
   

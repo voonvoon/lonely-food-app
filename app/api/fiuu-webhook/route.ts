@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     data.treq = 1; // Additional parameter for IPN. Value always set to 1.
 
     // Extract metadata if available
-    const metadata = data.extraP.metadata ? JSON.parse(data.extraP.metadata) : {};
+    //const metadata = data.extraP.metadata ? JSON.parse(data.extraP.metadata) : {};
 
     let {
       nbcb,
@@ -38,12 +38,14 @@ export async function POST(req: NextRequest) {
 
 
     // Ensure extraP is an object
-    if (typeof extraP === "string") {
-      extraP = JSON.parse(extraP);
-    }
+    // if (typeof extraP === "string") {
+    //   extraP = JSON.parse(extraP);
+    // }
+
+    extraP = JSON.parse(extraP);
 
     // Include metadata in extraP
-    extraP.metadata = metadata;
+    //extraP.metadata = metadata;
 
     // Verify the data integrity
     const key0 = CryptoJS.MD5(
@@ -89,10 +91,11 @@ export async function POST(req: NextRequest) {
         // Write your script here for successful transaction
         console.log("Transaction successful yeah woo!!!! i am the best !!");
       }
-      console.log(
-        "Received data status === 00------------------------------------------------>>:",
-        data
-      );
+      // console.log(
+      //   "Received data status === 00------------------------------------------------>>:",
+      //   data
+      // );
+      console.log("Parsed extraP:", extraP);
 
       // console.log(
       //   "ExtraP------------------------------------------------>>:",
