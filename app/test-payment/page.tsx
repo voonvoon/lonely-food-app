@@ -49,13 +49,13 @@ const CreatePaymentLinkPage = () => {
   //   { id: "5item1id", amount: "25.25", name: "cake" }
   // ])
 
-  const metadata = [
+  const metadata = JSON.stringify([
     { id: "1itemid", amount: "15.00", name: "fish and chips" },
     { id: "2item1id", amount: "20.50", name: "fried" },
     { id: "3item1id", amount: "15.75", name: "ice creame" },
     { id: "4item1id", amount: "30.00", name: "100 plus" },
     { id: "5item1id", amount: "25.25", name: "cake" }
-  ]
+  ]);
 
   const handleCreatePaymentLink = async () => {
     
