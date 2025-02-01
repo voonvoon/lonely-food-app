@@ -18,8 +18,8 @@ export async function POST(req: NextRequest) {
     }
 
     // Parse extraP if it is a JSON encoded string
-    if (typeof data.extraP === "string") {
-      data.extraP = JSON.parse(data.extraP);
+    if (typeof data.extraP.metadata === "string") {
+      data.extraP.metadata = JSON.parse(data.extraP);
     }
 
     data.treq = 1; // Additional parameter for IPN. Value always set to 1.
