@@ -17,6 +17,11 @@ export async function POST(req: NextRequest) {
       data = await req.json();
     }
 
+    // Parse extraP if it is a JSON encoded string
+    if (typeof data.extraP === "string") {
+      data.extraP = JSON.parse(data.extraP);
+    }
+
     data.treq = 1; // Additional parameter for IPN. Value always set to 1.
 
     // Extract metadata if available
@@ -37,13 +42,7 @@ export async function POST(req: NextRequest) {
     } = data;
 
 
-    // Ensure extraP is an object
-    // if (typeof extraP === "string") {
-    //   extraP = JSON.parse(extraP);
-    // }
-
-    //extraP = JSON.parse(extraP);
-    
+  
 
     // Include metadata in extraP
     //extraP.metadata = metadata;
@@ -96,7 +95,7 @@ export async function POST(req: NextRequest) {
       //   "Received data status === 00------------------------------------------------>>:",
       //   data
       // );
-      console.log("Parsed extraP:", extraP);
+      console.log("extraP--------------------------->>>>>", extraP);
 
       // console.log(
       //   "ExtraP------------------------------------------------>>:",
