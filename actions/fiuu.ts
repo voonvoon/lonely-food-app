@@ -89,23 +89,7 @@ export async function createPaymentData() {
   //receive params from client side [{id:..., number:...},...]
   //fetch data from database and do own calculation and return the total amount from here.
 
-  const data: {
-    merchant_id: string;
-    amount: string;
-    orderid: string;
-    bill_name: string;
-    bill_email: string;
-    bill_mobile: string;
-    bill_desc: any;
-    vcode?: string;
-    b_addr1?: string;
-    b_addr2?: string;
-    b_zipcode?: string;
-    b_city?: string;
-    b_state?: string;
-    country?: string;
-    metadata?: any;
-  } = {
+  const data = {
     merchant_id: merchantID,
     amount: "4.98",
     orderid: "DEMO3030",
@@ -119,13 +103,14 @@ export async function createPaymentData() {
     b_city: "KL",
     b_state: "Selangor",
     country: "MY",
-    metadata: JSON.stringify([
-      { id: "1itemid", amount: "15.00", name: "fish and chips" },
-      { id: "2item1id", amount: "20.50", name: "fried" },
-      { id: "3item1id", amount: "15.75", name: "ice creame" },
-      { id: "4item1id", amount: "30.00", name: "100 plus" },
-      { id: "5item1id", amount: "25.25", name: "cake" }
-    ])
+    vcode: "",
+    // metadata: [
+    //   { id: "1itemid", amount: "15.00", name: "fish and chips" },
+    //   { id: "2item1id", amount: "20.50", name: "fried" },
+    //   { id: "3item1id", amount: "15.75", name: "ice creame" },
+    //   { id: "4item1id", amount: "30.00", name: "100 plus" },
+    //   { id: "5item1id", amount: "25.25", name: "cake" }
+    // ]
   };
 
   
