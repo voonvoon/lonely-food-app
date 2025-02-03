@@ -9,7 +9,6 @@ export async function POST(req: NextRequest) {
     let data;
     const contentType = req.headers.get("content-type");
 
-
     if (contentType === "application/x-www-form-urlencoded") {
       const text = await req.text();
       data = querystring.parse(text);
@@ -18,14 +17,11 @@ export async function POST(req: NextRequest) {
     }
 
     // Parse extraP if it is a JSON encoded string
-    if (typeof data.extraP.metadata === "string") {
-      data.extraP.metadata = JSON.parse(data.extraP);
+    if (typeof data.extraP === "string") {
+      data.extraP = JSON.parse(data.extraP);
     }
 
     data.treq = 1; // Additional parameter for IPN. Value always set to 1.
-
-    // Extract metadata if available
-    //const metadata = data.extraP.metadata ? JSON.parse(data.extraP.metadata) : {};
 
     let {
       nbcb,
@@ -38,14 +34,8 @@ export async function POST(req: NextRequest) {
       appcode,
       paydate,
       skey,
-      extraP, // Ensure extraP is an object
+      extraP,
     } = data;
-
-
-  
-
-    // Include metadata in extraP
-    //extraP.metadata = metadata;
 
     // Verify the data integrity
     const key0 = CryptoJS.MD5(
@@ -59,54 +49,16 @@ export async function POST(req: NextRequest) {
       status = "-1"; // Invalid transaction
     }
 
-    //this won't log anything
-    // console.log(
-    //   "Received data before check status------------------------------------------------>>:",
-    //   data
-    // );
-
-    // {
-    //     nbcb: "2",
-    //     tranID: "30937377",
-    //     orderid: "DEMO3388",
-    //     status: "00",
-    //     error_desc: "",
-    //     error_code: "",
-    //     domain: "SB_pelicanwebdev",
-    //     amount: "3.88",
-    //     currency: "RM",
-    //     appcode: "",
-    //     paydate: "2025-01-29 14:28:30",
-    //     skey: "cb1658912bc7e18e65791666b7c61f65",
-    //     channel: "cimb",
-    //     extraP: "{ ccbrand: 'Visa', cclast4: '1111', cctype: 'Credit' }",
-    //     treq: 1,
-    //   }
-
-    //extraP :
-    //{ ccbrand: 'Visa', cclast4: '1111', cctype: 'Credit', metadata: {} }
-
     if (status === "00") {
       if (checkCartAmount(orderid, amount)) {
-        // Write your script here for successful transaction
         console.log("Transaction successful yeah woo!!!! i am the best !!");
       }
-      // console.log(
-      //   "Received data status === 00------------------------------------------------>>:",
-      //   data
-      // );
+      console.log("data--------------------------->>>>>", data);
       console.log("extraP--------------------------->>>>>", extraP);
-
-      // console.log(
-      //   "ExtraP------------------------------------------------>>:",
-      //   extraP
-      // );
     } else {
-      // Failure action
       console.log("Transaction failed");
     }
 
-    // Respond with a success message
     return NextResponse.json(
       { message: "Payment status received successfully" },
       { status: 200 }
