@@ -20,10 +20,6 @@ export const createPaymentLinkGet = async (): Promise<string> => {
     bill_email: "wonghv@gmail.com",
     bill_mobile: "+0166307168",
     bill_desc: "test webhook!",
-    // b_addr1: "1234",
-    // b_addr2: "jln 123",
-    // b_zipcode: "12345",
-    // b_city:'KL',
   };
 
   const queryString = new URLSearchParams(data).toString();
@@ -44,48 +40,37 @@ export const createPaymentLinkGet = async (): Promise<string> => {
 };
 
 //below is testing code for post method
-
 export const createPaymentLinkPost = async (): Promise<string> => {
   const data = {
     merchant_id: merchantID,
     amount: "3.33",
     orderid: "DEMO5179",
-    bill_name: "RMS+Demo",
+    bill_name: "RMS Demo",
     bill_email: "demo@RMS.com",
     bill_mobile: "55218438",
-    bill_desc: "testing+by+RMS",
-    vcode: "a5e2d4ed5e16859a2acfb28c7707f09c",
+    bill_desc: "testing by RMS",
+    vcode: "",
+    metadata: JSON.stringify([
+      { id: "1itemid", amount: "15.00", name: "fish and chips" },
+      { id: "2item1id", amount: "20.50", name: "fried" },
+      { id: "3item1id", amount: "15.75", name: "ice creame" },
+      { id: "4item1id", amount: "30.00", name: "100 plus" },
+      { id: "5item1id", amount: "25.25", name: "cake" }
+    ])
   };
 
-  const data_parms = JSON.stringify(data);
-
-  console.log(
-    "Data Params-------------------------------------------------->: ",
-    data_parms
+  const vcode = getMD5HashData(
+    `${data.amount}${merchantID}${data.orderid}${vkey}`
   );
 
-  const url = "https://sandbox.merchant.razer.com/RMS/pay/SB_pelicanwebdev/";
+  data.vcode = vcode;
 
-  const formData = new FormData();
-  const parsedData = JSON.parse(data_parms);
-  for (const key in parsedData) {
-    if (parsedData.hasOwnProperty(key)) {
-      formData.append(key, parsedData[key]);
-    }
-  }
+  const url = `https://sandbox.merchant.razer.com/RMS/pay/${merchantID}/`;
 
-  const response = await fetch(url, {
-    method: "POST",
-    body: formData,
-  });
-
-  const result = await response.text();
-  console.log("result------------------------------->", result);
-  return result;
+  return JSON.stringify({ url, data });
 };
 
 export async function createPaymentData() {
-
   //receive params from client side [{id:..., number:...},...]
   //fetch data from database and do own calculation and return the total amount from here.
 
@@ -104,16 +89,14 @@ export async function createPaymentData() {
     b_state: "Selangor",
     country: "MY",
     vcode: "",
-    // metadata: [
-    //   { id: "1itemid", amount: "15.00", name: "fish and chips" },
-    //   { id: "2item1id", amount: "20.50", name: "fried" },
-    //   { id: "3item1id", amount: "15.75", name: "ice creame" },
-    //   { id: "4item1id", amount: "30.00", name: "100 plus" },
-    //   { id: "5item1id", amount: "25.25", name: "cake" }
-    // ]
+    metadata: JSON.stringify([
+      { id: "1itemid", amount: "15.00", name: "fish and chips" },
+      { id: "2item1id", amount: "20.50", name: "fried" },
+      { id: "3item1id", amount: "15.75", name: "ice creame" },
+      { id: "4item1id", amount: "30.00", name: "100 plus" },
+      { id: "5item1id", amount: "25.25", name: "cake" }
+    ])
   };
-
-  
 
   const vcode = getMD5HashData(
     `${data.amount}${merchantID}${data.orderid}${vkey}`
