@@ -3,7 +3,7 @@ import CryptoJS from "crypto-js";
 import querystring from "querystring";
 
 export async function POST(req: NextRequest) {
-  const sec_key = "428356ca6c81dfbfa2181bcdc1def2f6"; // Replace xxxxxxxxxx with Secret_Key
+  const sec_key = "07c2547513b28bb9a671f5b925653ca9"; // Replace xxxxxxxxxx with Secret_Key
 
   try {
     let data;
