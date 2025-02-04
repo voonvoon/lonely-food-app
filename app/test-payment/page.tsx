@@ -64,7 +64,9 @@ const CreatePaymentLinkPage = () => {
     // Set the form's method to POST
     form.method = "POST";
     // Set the form's action to the URL where the POST request should be sent
-    form.action = `https://sandbox.merchant.razer.com/RMS/pay/${data.merchant_id}/`;
+    // form.action = `https://sandbox.merchant.razer.com/RMS/pay/${data.merchant_id}/`;
+    form.action = `https://pay.fiuu.com/RMS/pay/${data.merchant_id}/`;
+    
     // Set the form's target to '_blank' to open the result in a new tab
     form.target = "_blank";
 

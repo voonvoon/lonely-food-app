@@ -43,7 +43,7 @@ export const createPaymentLinkGet = async (): Promise<string> => {
 export const createPaymentLinkPost = async (): Promise<string> => {
   const data = {
     merchant_id: merchantID,
-    amount: "3.33",
+    amount: "0.50",
     orderid: "DEMO5179",
     bill_name: "RMS Demo",
     bill_email: "demo@RMS.com",
@@ -55,8 +55,8 @@ export const createPaymentLinkPost = async (): Promise<string> => {
       { id: "2item1id", amount: "20.50", name: "fried" },
       { id: "3item1id", amount: "15.75", name: "ice creame" },
       { id: "4item1id", amount: "30.00", name: "100 plus" },
-      { id: "5item1id", amount: "25.25", name: "cake" }
-    ])
+      { id: "5item1id", amount: "25.25", name: "cake" },
+    ]),
   };
 
   const vcode = getMD5HashData(
@@ -65,7 +65,9 @@ export const createPaymentLinkPost = async (): Promise<string> => {
 
   data.vcode = vcode;
 
-  const url = `https://sandbox.merchant.razer.com/RMS/pay/${merchantID}/`;
+  //const url = `https://sandbox.merchant.razer.com/RMS/pay/${merchantID}/`;
+  // const url = `https://sandbox.fiuu.com/RMS/pay/${merchantID}/`
+ const url = `https://pay.fiuu.com/RMS/pay/${merchantID}/`;
 
   return JSON.stringify({ url, data });
 };
@@ -94,8 +96,8 @@ export async function createPaymentData() {
       { id: "2item1id", amount: "20.50", name: "fried" },
       { id: "3item1id", amount: "15.75", name: "ice creame" },
       { id: "4item1id", amount: "30.00", name: "100 plus" },
-      { id: "5item1id", amount: "25.25", name: "cake" }
-    ])
+      { id: "5item1id", amount: "25.25", name: "cake" },
+    ]),
   };
 
   const vcode = getMD5HashData(
