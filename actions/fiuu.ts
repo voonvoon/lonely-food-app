@@ -40,23 +40,57 @@ export const createPaymentLinkGet = async (): Promise<string> => {
 };
 
 //below is testing code for post method
-export const createPaymentLinkPost = async (): Promise<string> => {
+export const createPaymentLinkPost = async (items: any): Promise<string> => {
+  const totalAmount = items
+    .reduce((total: number, item: any) => {
+      return total + parseFloat(item.price) * item.number;
+    }, 0)
+    .toFixed(2);
+
+    const generateRandomOrderId = (): string => {
+      const randomDigits = Math.floor(1000 + Math.random() * 9000).toString();
+      return `test${randomDigits}`;
+    };
+
+
+
   const data = {
     merchant_id: merchantID,
-    amount: "0.50",
-    orderid: "DEMO5179",
+    amount: totalAmount,
+    orderid: generateRandomOrderId(),
     bill_name: "RMS Demo",
     bill_email: "demo@RMS.com",
     bill_mobile: "55218438",
     bill_desc: "testing by RMS",
+    b_addr1: "A-16-13a, menara prima avenue",
+    b_addr2: "jln 123",
+    b_zipcode: "12345",
+    b_city: "KL",
+    b_state: "Selangor",
+    country: "MY",
+    s_name: "peter zai",
+    s_addr1: "jln successs 123",
     vcode: "",
-    metadata: JSON.stringify([
-      { id: "1itemid", amount: "15.00", name: "fish and chips" },
-      { id: "2item1id", amount: "20.50", name: "fried" },
-      { id: "3item1id", amount: "15.75", name: "ice creame" },
-      { id: "4item1id", amount: "30.00", name: "100 plus" },
-      { id: "5item1id", amount: "25.25", name: "cake" },
-    ]),
+    metadata: JSON.stringify({
+      item: items,
+      // item: [
+      //   { id: "1itemid", amount: "15.00", name: "fish and chips" },
+      //   { id: "2item1id", amount: "20.50", name: "fried" },
+      //   { id: "3item1id", amount: "15.75", name: "ice cream" },
+      //   { id: "4item1id", amount: "30.00", name: "100 plus" },
+      //   { id: "5item1id", amount: "25.25", name: "cake" },
+      // ],
+      others: {
+        b_addr1: "A-16-13a, menara prima avenue",
+        b_addr2: "jln 123",
+        b_zipcode: "12345",
+        b_city: "KL",
+        b_state: "Selangor",
+        country: "MY",
+        s_name: "peter zai",
+        s_addr1: "jln success 123",
+      },
+    }),
   };
 
   const vcode = getMD5HashData(
@@ -67,7 +101,7 @@ export const createPaymentLinkPost = async (): Promise<string> => {
 
   //const url = `https://sandbox.merchant.razer.com/RMS/pay/${merchantID}/`;
   // const url = `https://sandbox.fiuu.com/RMS/pay/${merchantID}/`
- const url = `https://pay.fiuu.com/RMS/pay/${merchantID}/`;
+  const url = `https://pay.fiuu.com/RMS/pay/${merchantID}/`;
 
   return JSON.stringify({ url, data });
 };
