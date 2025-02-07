@@ -1,5 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import { OrderContext } from "@/context/order";
+import { createPaymentLinkPost } from "@/actions/fiuu";
 
 // interface SidebarProps {
 //     cartItems: Array<{ id: number; title: string, price: number, number: number }>;
@@ -8,7 +9,6 @@ import { OrderContext } from "@/context/order";
 // }
 
 const Sidebar: React.FC = () => {
-
   const { cartItems, setCartItems, isSidebarOpen, setIsSidebarOpen } =
     useContext(OrderContext);
   useEffect(() => {
@@ -49,7 +49,10 @@ const Sidebar: React.FC = () => {
       <h2 className="text-xl font-bold p-4">Items Added</h2>
       <ul className="p-4">
         {cartItems.map((item: any) => (
-          <li key={item.id} className="border-b py-2 flex flex-col items-center justify-center">
+          <li
+            key={item.id}
+            className="border-b py-2 flex flex-col items-center justify-center"
+          >
             <div className="flex  items-center mb-1">
               <span className="p-1 font-light ">{item.title}</span>
               <span className="p-1">
@@ -111,9 +114,51 @@ const Sidebar: React.FC = () => {
             .toFixed(2)}
         </p>
       </div>
+
+      <button
+        onClick={async () => {
+          const response = await createPaymentLinkPost(cartItems);
+          const { url, data } = JSON.parse(response);
+
+          // Create a new form element
+          const form = document.createElement("form");
+          console.log(
+            "form ----------------------------------------------->:",
+            form
+          );
+          // Set the form's method to POST
+          form.method = "POST";
+          // Set the form's action to the URL where the POST request should be sent
+          form.action = url;
+          // Set the form's target to '_blank' to open the result in a new tab
+          //form.target = "_blank";
+
+          // Loop through each key in the data object
+          for (const key in data) {
+            if (data.hasOwnProperty(key)) {
+              // Create a hidden input element for each key-value pair
+              const input = document.createElement("input");
+              input.type = "hidden";
+              input.name = key;
+              input.value = data[key];
+              // Append the input element to the form
+              form.appendChild(input);
+            }
+          }
+
+          // Append the form to the document body
+          document.body.appendChild(form);
+          // Submit the form, which sends the POST request and opens the result in a new tab
+          form.submit();
+          // Remove the form from the document body
+          document.body.removeChild(form);
+        }}
+        className="w-full px-5 py-2 text-lg cursor-pointer bg-pink-500 text-white border-none rounded mt-4"
+      >
+        Make Payment
+      </button>
     </div>
   );
 };
-
 
 export default Sidebar;

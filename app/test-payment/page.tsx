@@ -1,11 +1,14 @@
 "use client";
 
-// import { useState } from "react";
+import { useContext } from "react";
+import { OrderContext } from "@/context/order";
 import {
   createPaymentLinkGet,
   createPaymentLinkPost,
   createPaymentData,
 } from "@/actions/fiuu";
+
+
 
 // const CreatePaymentLinkPage = () => {
 //   const handleCreatePaymentLink = async () => {
@@ -40,6 +43,11 @@ import {
 // export default CreatePaymentLinkPage;
 
 const CreatePaymentLinkPage = () => {
+
+  const { cartItems } = useContext(OrderContext);
+
+console.log("cartItems from test payment--------------------------------------------->:", cartItems);
+
   // const metadata = JSON.stringify([
   //   { id: "1itemid", amount: "10.00", name: "fish and chips" },
   //   { id: "2item1id", amount: "20.50", name: "fried" },
@@ -66,7 +74,7 @@ const CreatePaymentLinkPage = () => {
     // Set the form's action to the URL where the POST request should be sent
     // form.action = `https://sandbox.merchant.razer.com/RMS/pay/${data.merchant_id}/`;
     form.action = `https://pay.fiuu.com/RMS/pay/${data.merchant_id}/`;
-    
+
     // Set the form's target to '_blank' to open the result in a new tab
     form.target = "_blank";
 
@@ -160,20 +168,13 @@ const CreatePaymentLinkPage = () => {
 
       <button
         onClick={async () => {
-          const response = await createPaymentLinkPost();
+          const response = await createPaymentLinkPost(cartItems);
           const { url, data } = JSON.parse(response);
-          console.log(
-            "url----------------------------------------------->:",
-            url
-          );
-          console.log(
-            "data----------------------------------------------->:",
-            data
-          );
+
           // Create a new form element
           const form = document.createElement("form");
           console.log(
-            "form chor 6----------------------------------------------->:",
+            "form ----------------------------------------------->:",
             form
           );
           // Set the form's method to POST
