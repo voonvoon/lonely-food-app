@@ -6,6 +6,23 @@ const OrderSummary: React.FC = () => {
   const [showCartItems, setShowCartItems] = useState<any[]>([]);
 
   useEffect(() => {
+    const sa = "pelicanwebdev_Dev";
+    const m = document.createElement("IFRAME");
+    m.setAttribute(
+      "src",
+      "https://www.onlinepayment.com.my/MOLPay/API/chkstat/returnipn.php?treq=0&sa=" +
+        sa
+    );
+    m.setAttribute("seamless", "seamless");
+    m.setAttribute("width", "0");
+    m.setAttribute("height", "0");
+    m.setAttribute("frameborder", "0");
+    m.setAttribute("scrolling", "no");
+    m.setAttribute("style", "border:none !important;");
+    document.body.appendChild(m);
+  }, []);
+
+  useEffect(() => {
     const items = JSON.parse(localStorage.getItem("cartItems") || "[]");
     setShowCartItems(items);
     localStorage.setItem("cartItems", "");
