@@ -14,10 +14,10 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
     try {
         // Construct the absolute URL for redirection .
-        const url = new URL(`/order-summary?status=success`, req.nextUrl.origin);
+        const url = new URL(`/order-summary`, req.nextUrl.origin);
 
         // Redirect to the frontend page without passing any data
-        return NextResponse.redirect(url.toString(), 307);
+        return NextResponse.redirect(url.toString(), 303);
     } catch (error) {
         console.error('Error processing request:', error);
         return new NextResponse('Internal Server Error', { status: 500 });
