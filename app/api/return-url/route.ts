@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default function(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'POST') {
     // Process the payment data here
     const paymentData = req.body;
