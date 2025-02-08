@@ -9,12 +9,11 @@
 //     return NextResponse.redirect(`/order-summary?status=success&data=${encodeURIComponent(JSON.stringify(paymentData))}`, 307);
 // }
 
-
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
     try {
-        // Construct the absolute URL for redirection
+        // Construct the absolute URL for redirection .
         const url = new URL(`/order-summary?status=success`, req.nextUrl.origin);
 
         // Redirect to the frontend page without passing any data
