@@ -62,6 +62,7 @@ export const createPaymentLinkPost = async (items: any): Promise<string> => {
     bill_email: "demo@RMS.com",
     bill_mobile: "55218438",
     bill_desc: "testing by RMS",
+    returnurl:"https://lonely-food-app.vercel.app/api/return-url",
     b_addr1: "A-16-13a, menara prima avenue",
     b_addr2: "jln 123",
     b_zipcode: "12345",
