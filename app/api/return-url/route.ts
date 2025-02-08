@@ -1,14 +1,10 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+//import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from "next/server";
 
-export default function(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'POST') {
+export async function POST(req: NextRequest, res: NextResponse) {
     // Process the payment data here
     const paymentData = req.body;
 
     // Redirect to the frontend page with payment data
-    res.redirect(307, `/order-summary?status=success&data=${encodeURIComponent(JSON.stringify(paymentData))}`);
-  } else {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
-  }
+    return NextResponse.redirect(`/order-summary?status=success&data=${encodeURIComponent(JSON.stringify(paymentData))}`, 307);
 }
