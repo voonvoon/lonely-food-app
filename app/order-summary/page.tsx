@@ -1,9 +1,9 @@
 "use client";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
-const OrderSummary: React.FC = () => {
+const OrderSummaryContent: React.FC = () => {
   const [showCartItems, setShowCartItems] = useState<any[]>([]);
   const searchParams = useSearchParams();
 
@@ -14,7 +14,10 @@ const OrderSummary: React.FC = () => {
     if (data) {
       // Decode and parse the data parameter
       const parsedData = JSON.parse(decodeURIComponent(data));
-      console.log('Received data frontend----------------------->>>:', parsedData);
+      console.log(
+        "Received data frontend----------------------->>>:",
+        parsedData
+      );
     }
 
     const items = JSON.parse(localStorage.getItem("cartItems") || "[]");
@@ -57,6 +60,14 @@ const OrderSummary: React.FC = () => {
         </Link>
       </div>
     </div>
+  );
+};
+
+const OrderSummary: React.FC = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <OrderSummaryContent />
+    </Suspense>
   );
 };
 
@@ -115,6 +126,3 @@ export default OrderSummary;
 // };
 
 // export default OrderSummary;
-
-
-
