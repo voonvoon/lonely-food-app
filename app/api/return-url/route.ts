@@ -23,8 +23,18 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
     try {
-        // Parse the request body to get the parameters
-        const body = await req.json();
+        // Read the request body as text
+        const bodyText = await req.text();
+        let body;
+
+        // Try to parse the body text as JSON
+        try {
+            body = JSON.parse(bodyText);
+        } catch (error) {
+            console.error('Invalid JSON:', bodyText);
+            return new NextResponse('Bad Request: Invalid JSON', { status: 400 });
+        }
+
         console.log('Received parameters backend---------------------------->>:', body);
 
         // Convert the body to a JSON string and encode it
