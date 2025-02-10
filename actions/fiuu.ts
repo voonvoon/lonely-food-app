@@ -52,7 +52,28 @@ export const createPaymentLinkPost = async (items: any): Promise<string> => {
       return `test${randomDigits}`;
     };
 
-
+  const metadata = JSON.stringify({
+    item: items,
+    // item: [
+    //   { id: "1itemid", amount: "15.00", name: "fish and chips" },
+    //   { id: "2item1id", amount: "20.50", name: "fried" },
+    //   { id: "3item1id", amount: "15.75", name: "ice cream" },
+    //   { id: "4item1id", amount: "30.00", name: "100 plus" },
+    //   { id: "5item1id", amount: "25.25", name: "cake" },
+    // ],
+    others: {
+      phone: "016-6307168",
+      email:"wonghv@gmail.com",
+      b_addr1: "A-16-13a, menara prima avenue",
+      b_addr2: "jln 123",
+      b_zipcode: "12345",
+      b_city: "KL",
+      b_state: "Selangor",
+      country: "MY",
+      s_name: "peter zai",
+      s_addr1: "jln success 123",
+    },
+  });
 
   const data = {
     merchant_id: merchantID,
@@ -72,26 +93,7 @@ export const createPaymentLinkPost = async (items: any): Promise<string> => {
     s_name: "peter zai",
     s_addr1: "jln successs 123",
     vcode: "",
-    metadata: JSON.stringify({
-      item: items,
-      // item: [
-      //   { id: "1itemid", amount: "15.00", name: "fish and chips" },
-      //   { id: "2item1id", amount: "20.50", name: "fried" },
-      //   { id: "3item1id", amount: "15.75", name: "ice cream" },
-      //   { id: "4item1id", amount: "30.00", name: "100 plus" },
-      //   { id: "5item1id", amount: "25.25", name: "cake" },
-      // ],
-      others: {
-        b_addr1: "A-16-13a, menara prima avenue",
-        b_addr2: "jln 123",
-        b_zipcode: "12345",
-        b_city: "KL",
-        b_state: "Selangor",
-        country: "MY",
-        s_name: "peter zai",
-        s_addr1: "jln success 123",
-      },
-    }),
+    metadata: metadata,
   };
 
   const vcode = getMD5HashData(

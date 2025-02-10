@@ -2,6 +2,33 @@ import { NextRequest, NextResponse } from "next/server";
 import CryptoJS from "crypto-js";
 import querystring from "querystring";
 
+import { db } from "@/db";
+
+// create a function to create order
+async function createOrder(data: any) {
+  try {
+    const orderData = {
+      //...data,
+      name: data.extraP.metadata.others.s_name,
+      orderItems: data.extraP.metadata.item,
+      email: data.extraP.metadata.others.email,
+      totalAmount: data.amount,
+      phone: data.extraP.metadata.others.phone,
+      tranID: data.tranID,
+      orderid: data.orderid,  
+    };
+
+    const order = await db.order.create({
+      data: orderData,
+    });
+
+    // Order created successfully, no need to return anything
+  } catch (error) {
+    console.error("Error creating order:", error);
+    return null;
+  }
+}
+
 export async function POST(req: NextRequest) {
   const sec_key = "07c2547513b28bb9a671f5b925653ca9"; // Replace xxxxxxxxxx with Secret_Key
 
@@ -34,7 +61,7 @@ export async function POST(req: NextRequest) {
       appcode,
       paydate,
       skey,
-      extraP,
+      extraP, 
     } = data;
 
     // Verify the data integrity
@@ -50,11 +77,14 @@ export async function POST(req: NextRequest) {
     }
 
     if (status === "00") {
-      if (checkCartAmount(orderid, amount)) {
-        console.log("Transaction successful yeah woo!!!! i am the best !!");
-      }
+      // if (checkCartAmount(orderid, amount)) {
+      //   console.log("Transaction successful yeah woo!!!! i am the best !!");
+      // }
+      // console.log("data--------------------------->>>>>", data);
+      // console.log("extraP--------------------------->>>>>", extraP);
+      createOrder(data); 
       console.log("data--------------------------->>>>>", data);
-      console.log("extraP--------------------------->>>>>", extraP);
+
     } else {
       console.log("Transaction failed");
     }
