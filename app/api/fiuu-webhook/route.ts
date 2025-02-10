@@ -8,11 +8,10 @@ import { db } from "@/db";
 async function createOrder(data: any) {
   try {
     const orderData = {
-      //...data,
       name: data.extraP.metadata.others.s_name,
       orderItems: data.extraP.metadata.item,
       email: data.extraP.metadata.others.email,
-      totalAmount: data.amount,
+      totalAmount: parseFloat(data.amount),
       phone: data.extraP.metadata.others.phone,
       tranID: data.tranID,
       orderid: data.orderid,
