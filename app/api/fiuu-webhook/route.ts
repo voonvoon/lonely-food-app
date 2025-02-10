@@ -49,9 +49,9 @@ export async function POST(req: NextRequest) {
     }
 
     // Parse extraP.metadata if it is a JSON encoded string
-    // if (typeof data.extraP.metadata === "string") {
-    //   data.extraP.metadata = JSON.parse(data.extraP.metadata);
-    // }
+    if (typeof data.extraP.metadata === "string") {
+      data.extraP.metadata = JSON.parse(data.extraP.metadata);
+    }
 
     data.treq = 1; // Additional parameter for IPN. Value always set to 1.
 
@@ -89,7 +89,8 @@ export async function POST(req: NextRequest) {
       // console.log("extraP--------------------------->>>>>", extraP);
 
       await createOrder(data);
-      console.log("data--------------------------->>>>>", data);
+      //console.log("data--------------------------->>>>>", data);
+      console.log("extraP--------------------------->>>>>", extraP);
     } else {
       console.log("Transaction failed");
     }
