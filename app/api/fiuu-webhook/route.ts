@@ -15,7 +15,7 @@ async function createOrder(data: any) {
       totalAmount: data.amount,
       phone: data.extraP.metadata.others.phone,
       tranID: data.tranID,
-      orderid: data.orderid,  
+      orderid: data.orderid,
     };
 
     const order = await db.order.create({
@@ -43,9 +43,9 @@ export async function POST(req: NextRequest) {
       data = await req.json();
     }
 
-    // Parse extraP if it is a JSON encoded string
-    if (typeof data.extraP === "string") {
-      data.extraP = JSON.parse(data.extraP);
+    // Parse extraP.metadata if it is a JSON encoded string
+    if (typeof data.extraP.metadata === "string") {
+      data.extraP.metadata = JSON.parse(data.extraP.metadata);
     }
 
     data.treq = 1; // Additional parameter for IPN. Value always set to 1.
@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
       appcode,
       paydate,
       skey,
-      extraP, 
+      extraP,
     } = data;
 
     // Verify the data integrity
@@ -82,10 +82,9 @@ export async function POST(req: NextRequest) {
       // }
       // console.log("data--------------------------->>>>>", data);
       // console.log("extraP--------------------------->>>>>", extraP);
-      const parseData = JSON.parse(data);
-      await createOrder(parseData);
-      console.log("data--------------------------->>>>>", parseData);
 
+      await createOrder(data);
+      console.log("data--------------------------->>>>>", data);
     } else {
       console.log("Transaction failed");
     }
