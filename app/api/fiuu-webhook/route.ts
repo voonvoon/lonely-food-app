@@ -42,15 +42,16 @@ export async function POST(req: NextRequest) {
       data = await req.json();
     }
 
+    //double parsing ensures that both data.extraP and its nested property metadata are properly converted from JSON strings to JavaScript objects, allowing you to work with them 
      // Parse extraP if it is a JSON encoded string
      if (typeof data.extraP === "string") {
       data.extraP = JSON.parse(data.extraP);
     }
 
     // Parse extraP.metadata if it is a JSON encoded string
-    // if (typeof data.extraP.metadata === "string") {
-    //   data.extraP.metadata = JSON.parse(data.extraP.metadata);
-    // }
+    if (typeof data.extraP.metadata === "string") {
+      data.extraP.metadata = JSON.parse(data.extraP.metadata);
+    }
 
     data.treq = 1; // Additional parameter for IPN. Value always set to 1.
 
