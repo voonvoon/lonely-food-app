@@ -82,8 +82,9 @@ export async function POST(req: NextRequest) {
       // }
       // console.log("data--------------------------->>>>>", data);
       // console.log("extraP--------------------------->>>>>", extraP);
-      createOrder(data); 
-      console.log("data--------------------------->>>>>", data);
+      const parseData = JSON.parse(data);
+      await createOrder(parseData);
+      console.log("data--------------------------->>>>>", parseData);
 
     } else {
       console.log("Transaction failed");
