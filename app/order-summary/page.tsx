@@ -1,29 +1,18 @@
-"use client";
+// "use client";
 import Link from "next/link";
-import React, { Suspense, useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+//
+import React, { useEffect, useState } from "react";
 
-const OrderSummaryContent: React.FC = () => {
+const OrderSummary: React.FC = () => {
   const [showCartItems, setShowCartItems] = useState<any[]>([]);
-  const searchParams = useSearchParams();
 
   useEffect(() => {
-    // Retrieve the data parameter from the URL
-    const data = searchParams.get("data");
-
-    if (data) {
-      // Decode and parse the data parameter
-      const parsedData = JSON.parse(decodeURIComponent(data));
-      console.log(
-        "Received data frontend----------------------->>>:",
-        parsedData
-      );
-    }
-
     const items = JSON.parse(localStorage.getItem("cartItems") || "[]");
     setShowCartItems(items);
-    localStorage.setItem("cartItems", "");
-  }, [searchParams]);
+    setTimeout(() => {
+      localStorage.setItem("cartItems", "");
+    }, 100); // Delay to allow state update
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
@@ -63,29 +52,35 @@ const OrderSummaryContent: React.FC = () => {
   );
 };
 
-const OrderSummary: React.FC = () => {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <OrderSummaryContent />
-    </Suspense>
-  );
-};
-
 export default OrderSummary;
+
 
 // "use client";
 // import Link from "next/link";
-// //
-// import React, { useEffect, useState } from "react";
+// import React, { Suspense, useEffect, useState } from "react";
+// import { useSearchParams } from "next/navigation";
 
-// const OrderSummary: React.FC = () => {
+// const OrderSummaryContent: React.FC = () => {
 //   const [showCartItems, setShowCartItems] = useState<any[]>([]);
+//   const searchParams = useSearchParams();
 
 //   useEffect(() => {
+//     // Retrieve the data parameter from the URL
+//     const data = searchParams.get("data");
+
+//     if (data) {
+//       // Decode and parse the data parameter
+//       const parsedData = JSON.parse(decodeURIComponent(data));
+//       console.log(
+//         "Received data frontend----------------------->>>:",
+//         parsedData
+//       );
+//     }
+
 //     const items = JSON.parse(localStorage.getItem("cartItems") || "[]");
 //     setShowCartItems(items);
 //     localStorage.setItem("cartItems", "");
-//   }, []);
+//   }, [searchParams]);
 
 //   return (
 //     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
@@ -125,4 +120,13 @@ export default OrderSummary;
 //   );
 // };
 
+// const OrderSummary: React.FC = () => {
+//   return (
+//     <Suspense fallback={<div>Loading...</div>}>
+//       <OrderSummaryContent />
+//     </Suspense>
+//   );
+// };
+
 // export default OrderSummary;
+
