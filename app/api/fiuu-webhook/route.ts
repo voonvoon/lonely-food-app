@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
 
       await createOrder(data);
       //console.log("data--------------------------->>>>>", data);
-      console.log("extraP--------------------------->>>>>", extraP);
+      //console.log("extraP--------------------------->>>>>", extraP);
     } else {
       console.log("Transaction failed");
     }
