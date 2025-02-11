@@ -11,7 +11,7 @@ import { createPaymentLinkPost } from "@/actions/fiuu";
 const Sidebar: React.FC = () => {
   const { cartItems, setCartItems, isSidebarOpen, setIsSidebarOpen } =
     useContext(OrderContext);
-    
+
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -120,13 +120,7 @@ const Sidebar: React.FC = () => {
         onClick={async () => {
           const response = await createPaymentLinkPost(cartItems);
 
-          console.log("response----------------------------------------->", response);
-
-          //const { url, data } = JSON.parse(response);
           const { url, data } = response;
-
-          console.log("url----------------------------------------->", url);
-          console.log("data----------------------------------------->", data);
 
           // Create a new form element
           const form = document.createElement("form");
