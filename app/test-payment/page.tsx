@@ -169,7 +169,8 @@ console.log("cartItems from test payment----------------------------------------
       <button
         onClick={async () => {
           const response = await createPaymentLinkPost(cartItems);
-          const { url, data } = JSON.parse(response);
+          // const { url, data } = JSON.parse(response);
+          const { url, data } = response;
 
           // Create a new form element
           const form = document.createElement("form");
