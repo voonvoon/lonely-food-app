@@ -59,7 +59,7 @@ const OrderSummaryContent: React.FC = () => {
             </div>
           </>
         ) : (
-          <h2 className="text-2xl font-bold mb-4">Something Went Wrong! There is no order found! ...</h2>
+          <h2 className="text-2xl font-bold mb-4"> There is no order found ...</h2>
         )}
         <Link href="/">
           <div className="mt-6 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 text-center">
