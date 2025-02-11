@@ -4,19 +4,41 @@
 //redirect the user to the frontend page after the payment is completed.
 //303 status code indicates that the client should perform a GET request to the new URL instead of original POST.
 
+
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req: NextRequest) {
     try {
-        // Construct the absolute URL for redirection .
-        const url = new URL(`/order-summary`, req.nextUrl.origin); //req.nextUrl.origin gives you the base URL of the incoming request,
+        // Extract the orderId from the query parameters
+        const orderId = req.nextUrl.searchParams.get('id');
+        
+        if (!orderId) {
+            return new NextResponse('Bad Request: Missing orderId', { status: 400 });
+        }
+
+        // Construct the absolute URL for redirection with the orderId
+        const url = new URL(`/order-summary?id=${orderId}`, req.nextUrl.origin);
 
         // Redirect to the frontend page without passing any data
-        return NextResponse.redirect(url.toString(), 303); //The 303 makes client to perform a GET request to the new URL.
+        return NextResponse.redirect(url.toString(), 303); // The 303 makes client to perform a GET request to the new URL.
     } catch (error) {
         console.error('Error processing request:', error);
         return new NextResponse('Internal Server Error', { status: 500 });
     }
 }
+// import { NextRequest, NextResponse } from "next/server";
+
+// export async function POST(req: NextRequest) {
+//     try {
+//         // Construct the absolute URL for redirection .
+//         const url = new URL(`/order-summary`, req.nextUrl.origin); //req.nextUrl.origin gives you the base URL of the incoming request,
+
+//         // Redirect to the frontend page without passing any data
+//         return NextResponse.redirect(url.toString(), 303); //The 303 makes client to perform a GET request to the new URL.
+//     } catch (error) {
+//         console.error('Error processing request:', error);
+//         return new NextResponse('Internal Server Error', { status: 500 });
+//     }
+// }
 
 
