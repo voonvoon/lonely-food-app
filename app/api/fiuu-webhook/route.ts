@@ -37,18 +37,18 @@ export async function POST(req: NextRequest) {
 
     if (contentType === "application/x-www-form-urlencoded") {
       const text = await req.text();
-      data = querystring.parse(text);
+      data = querystring.parse(text);//for parsing URL query strings.
     } else {
       data = await req.json();
     }
 
-    //double parsing ensures that both data.extraP and its nested property metadata are properly converted from JSON strings to JavaScript objects, allowing you to work with them 
-     // Parse extraP if it is a JSON encoded string
+     //// Parse extraP if it is a JSON encoded string by payment gateway so parse it here ///
+    ///  metadatd also being passed as JSON string, so need to parse again in order to use here as jvs obj ///
      if (typeof data.extraP === "string") {
       data.extraP = JSON.parse(data.extraP);
     }
-
     // Parse extraP.metadata if it is a JSON encoded string
+    // i guess because when i pass metadata as JSON string, so this need parse again.
     if (typeof data.extraP.metadata === "string") {
       data.extraP.metadata = JSON.parse(data.extraP.metadata);
     }
@@ -82,12 +82,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (status === "00") {
-      // if (checkCartAmount(orderid, amount)) {
-      //   console.log("Transaction successful yeah woo!!!! i am the best !!");
-      // }
-      // console.log("data--------------------------->>>>>", data);
-      // console.log("extraP--------------------------->>>>>", extraP);
-
+  
       await createOrder(data);
       //console.log("data--------------------------->>>>>", data);
       console.log("extraP--------------------------->>>>>", extraP);
@@ -108,10 +103,3 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// Dummy function to check cart amount
-function checkCartAmount(orderid: string, amount: string): boolean {
-  // Implement your logic to check the cart amount
-  return true;
-}
-
-// //https://lonely-food-app.vercel.app/api/fiuu-webhook
