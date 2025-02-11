@@ -121,4 +121,41 @@ export const createPaymentLinkPost = async (items: any): Promise<{ url: string; 
   return { url, data };
 };
 
+export async function createPaymentData() {
+  //receive params from client side [{id:..., number:...},...]
+  //fetch data from database and do own calculation and return the total amount from here.
+
+  const data = {
+    merchant_id: merchantID,
+    amount: "4.98",
+    orderid: "DEMO3030",
+    bill_name: "Peter Zai",
+    bill_email: "wonghv@gmail.com",
+    bill_mobile: "+0166307168",
+    bill_desc: "chor 4 alone!",
+    b_addr1: "A-16-13a, menara prima avenue",
+    b_addr2: "jln 123",
+    b_zipcode: "12345",
+    b_city: "KL",
+    b_state: "Selangor",
+    country: "MY",
+    vcode: "",
+    metadata: JSON.stringify([
+      { id: "1itemid", amount: "15.00", name: "fish and chips" },
+      { id: "2item1id", amount: "20.50", name: "fried" },
+      { id: "3item1id", amount: "15.75", name: "ice creame" },
+      { id: "4item1id", amount: "30.00", name: "100 plus" },
+      { id: "5item1id", amount: "25.25", name: "cake" },
+    ]),
+  };
+
+  const vcode = getMD5HashData(
+    `${data.amount}${merchantID}${data.orderid}${vkey}`
+  );
+
+  data.vcode = vcode;
+
+  return data;
+}
+
 
