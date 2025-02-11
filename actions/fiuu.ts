@@ -40,7 +40,7 @@ export const createPaymentLinkGet = async (): Promise<string> => {
 };
 
 //below is testing code for post method
-export const createPaymentLinkPost = async (items: any): Promise<string> => {
+export const createPaymentLinkPost = async (items: any): Promise<{ url: string; data: any; }> => {
   const totalAmount = items
     .reduce((total: number, item: any) => {
       return total + parseFloat(item.price) * item.number;
@@ -108,7 +108,8 @@ export const createPaymentLinkPost = async (items: any): Promise<string> => {
   // const url = `https://sandbox.fiuu.com/RMS/pay/${merchantID}/`
   const url = `https://pay.fiuu.com/RMS/pay/${merchantID}/`;
 
-  return JSON.stringify({ url, data });
+  // return JSON.stringify({ url, data });
+  return { url, data };
 };
 
 export async function createPaymentData() {

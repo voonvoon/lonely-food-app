@@ -11,6 +11,7 @@ import { createPaymentLinkPost } from "@/actions/fiuu";
 const Sidebar: React.FC = () => {
   const { cartItems, setCartItems, isSidebarOpen, setIsSidebarOpen } =
     useContext(OrderContext);
+    
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
@@ -118,7 +119,14 @@ const Sidebar: React.FC = () => {
       <button
         onClick={async () => {
           const response = await createPaymentLinkPost(cartItems);
-          const { url, data } = JSON.parse(response);
+
+          console.log("response----------------------------------------->", response);
+
+          //const { url, data } = JSON.parse(response);
+          const { url, data } = response;
+
+          console.log("url----------------------------------------->", url);
+          console.log("data----------------------------------------->", data);
 
           // Create a new form element
           const form = document.createElement("form");
@@ -131,7 +139,7 @@ const Sidebar: React.FC = () => {
           // Set the form's action to the URL where the POST request should be sent
           form.action = url;
           // Set the form's target to '_blank' to open the result in a new tab
-          //form.target = "_blank";
+          form.target = "_blank";
 
           // Loop through each key in the data object
           for (const key in data) {
