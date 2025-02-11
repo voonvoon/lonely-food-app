@@ -28,7 +28,7 @@ const OrderSummary: React.FC = () => {
             {showCartItems &&
               showCartItems.map((item, index) => (
                 <li key={index}>
-                  {item.title} (Qty: {item.qty}): ${item.price}
+                  {item.title} (Qty: {item.number}): ${item.price}
                 </li>
               ))}
           </ul>
@@ -38,7 +38,7 @@ const OrderSummary: React.FC = () => {
             Total: $
             {showCartItems &&
               showCartItems
-                .reduce((total, item) => total + item.price, 0)
+                .reduce((total, item) => total + item.price * item.number, 0)
                 .toFixed(2)}
           </h3>
         </div>
