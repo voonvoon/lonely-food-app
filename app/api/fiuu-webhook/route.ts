@@ -29,7 +29,8 @@ async function createOrder(data: any) {
 }
 
 export async function POST(req: NextRequest) {
-  const sec_key = "07c2547513b28bb9a671f5b925653ca9"; // Replace xxxxxxxxxx with Secret_Key
+  
+  const sec_key = process.env.FIUU_SECRET_KEY; 
 
   try {
     let data;
@@ -37,14 +38,14 @@ export async function POST(req: NextRequest) {
 
     if (contentType === "application/x-www-form-urlencoded") {
       const text = await req.text();
-      data = querystring.parse(text);//for parsing URL query strings.
+      data = querystring.parse(text); //for parsing URL query strings.
     } else {
       data = await req.json();
     }
 
-     //// Parse extraP if it is a JSON encoded string by payment gateway so parse it here ///
+    //// Parse extraP if it is a JSON encoded string by payment gateway so parse it here ///
     ///  metadatd also being passed as JSON string, so need to parse again in order to use here as jvs obj ///
-     if (typeof data.extraP === "string") {
+    if (typeof data.extraP === "string") {
       data.extraP = JSON.parse(data.extraP);
     }
     // Parse extraP.metadata if it is a JSON encoded string
@@ -82,7 +83,6 @@ export async function POST(req: NextRequest) {
     }
 
     if (status === "00") {
-  
       await createOrder(data);
       //console.log("data--------------------------->>>>>", data);
       console.log("extraP--------------------------->>>>>", extraP);
@@ -102,4 +102,3 @@ export async function POST(req: NextRequest) {
     );
   }
 }
-
