@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import { addClient, removeClient } from './sseUtils';
 
+export const config = {
+  runtime: 'edge',
+};
+
 export function GET(req: Request) {
   // Set headers for SSE
   const headers = new Headers({
