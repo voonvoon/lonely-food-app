@@ -7,6 +7,7 @@ export function GET(req: Request) {
     'Content-Type': 'text/event-stream',
     'Cache-Control': 'no-cache',
     Connection: 'keep-alive',
+    'Access-Control-Allow-Origin': '*', // Add CORS header if needed
   });
 
   const stream = new ReadableStream({
@@ -17,11 +18,22 @@ export function GET(req: Request) {
 
       console.log(`Client connected: ${clientId}`);
 
+      // Send a heartbeat every 30 seconds to keep the connection alive
+      const heartbeatInterval = setInterval(() => {
+        controller.enqueue(`data: heartbeat\n\n`);
+      }, 30000);
+
       // Clean up when the connection closes
       req.signal.addEventListener('abort', () => {
+        clearInterval(heartbeatInterval);
         removeClient(clientId);
         console.log(`Client disconnected: ${clientId}`);
       });
+
+      // Error handling
+      controller.error = (err) => {
+        console.error(`Stream error: ${err}`);
+      };
     }
   });
 
