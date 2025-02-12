@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import CryptoJS from "crypto-js";
 import querystring from "querystring";
-import { sendNewOrderEvent } from "../sse/route";
+import { sendNewOrderEvent } from "../sse/sseUtils";
 
 
 import { db } from "@/db";
