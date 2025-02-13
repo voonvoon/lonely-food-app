@@ -23,11 +23,11 @@ export function GET(req: Request) {
       console.log(`Client connected: ${clientId}`);
 
       // Send an initial message to the client
-      controller.enqueue(`data: awaiting new order\n\n`);
+      controller.enqueue(`data: ${JSON.stringify({ message: 'awaiting new order' })}\n\n`);
 
       // Send a heartbeat every 30 seconds to keep the connection alive
       const heartbeatInterval = setInterval(() => {
-        controller.enqueue(`data: heartbeat\n\n`);
+        controller.enqueue(`data: ${JSON.stringify({ message: 'heartbeat' })}\n\n`);
       }, 30000);
 
       // Clean up when the connection closes
