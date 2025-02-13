@@ -26,13 +26,13 @@ export function GET(req: Request) {
       controller.enqueue(`data: ${JSON.stringify({ message: 'awaiting new order' })}\n\n`);
 
       // Send a heartbeat every 30 seconds to keep the connection alive
-      const heartbeatInterval = setInterval(() => {
-        controller.enqueue(`data: ${JSON.stringify({ message: 'heartbeat' })}\n\n`);
-      }, 30000);
+      // const heartbeatInterval = setInterval(() => {
+      //   controller.enqueue(`data: ${JSON.stringify({ message: 'heartbeat' })}\n\n`);
+      // }, 30000);
 
       // Clean up when the connection closes
       req.signal.addEventListener('abort', () => {
-        clearInterval(heartbeatInterval);
+        //clearInterval(heartbeatInterval);
         removeClient(clientId);
         console.log(`Client disconnected: ${clientId}`);
       });
