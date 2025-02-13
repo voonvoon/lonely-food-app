@@ -21,9 +21,11 @@ const [orders, setOrders] = useState<any>({});
       printOrderSlip(newOrder);
     };
 
-    // Handle errors or connection close
-    eventSource.onerror = (err) => {
+     // Handle errors or connection close
+     eventSource.onerror = (err) => {
       console.error('SSE error:', err);
+      console.error('EventSource readyState:', eventSource.readyState);
+      console.error('EventSource URL:', eventSource.url);
       eventSource.close();
     };
 

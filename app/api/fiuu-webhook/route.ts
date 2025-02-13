@@ -3,7 +3,6 @@ import CryptoJS from "crypto-js";
 import querystring from "querystring";
 import { sendNewOrderEvent } from "../sse/sseUtils";
 
-
 import { db } from "@/db";
 
 // create a function to create order
@@ -31,8 +30,7 @@ async function createOrder(data: any) {
 }
 
 export async function POST(req: NextRequest) {
-  
-  const sec_key = process.env.FIUU_SECRET_KEY; 
+  const sec_key = process.env.FIUU_SECRET_KEY;
 
   try {
     let data;
@@ -88,7 +86,7 @@ export async function POST(req: NextRequest) {
       await createOrder(data);
       //console.log("data--------------------------->>>>>", data);
       console.log("extraP--------------------------->>>>>", extraP);
-      sendNewOrderEvent(data);
+      sendNewOrderEvent({ newOrder: true });
     } else {
       console.log("Transaction failed");
     }
