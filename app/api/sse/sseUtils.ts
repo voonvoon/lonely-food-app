@@ -3,7 +3,14 @@ let clients: any[] = [];
 // Function to send events to all connected clients
 export function sendNewOrderEvent(order: any) {
   const data = `data: ${JSON.stringify(order)}\n\n`;
-  clients.forEach(client => client.controller.enqueue(new TextEncoder().encode(data)));
+  console.log('Sending new order event to clients:', data);
+  clients.forEach(client => {
+    try {
+      client.controller.enqueue(new TextEncoder().encode(data));
+    } catch (error) {
+      console.error('Error sending event to client:', error);
+    }
+  });
 }
 
 export function addClient(client: any) {
