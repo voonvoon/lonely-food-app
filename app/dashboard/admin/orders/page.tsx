@@ -5,6 +5,8 @@ import { useEffect, useState } from 'react';
 export default function Orders() {
   const [orders, setOrders] = useState<any[]>([]);
 
+  console.log('orders--------------------------------------->>:', orders);
+
   useEffect(() => {
     // Connect to the SSE endpoint
     const eventSource = new EventSource('/api/sse');
