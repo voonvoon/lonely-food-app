@@ -1,7 +1,7 @@
 {
-    "functions": {
-      "api/sse/route.ts": {
-        "runtime": "vercel-edge@1.0.0"
-      }
+  "functions": {
+    "app/api/sse/route.ts": {
+      "runtime": "edge"
     }
   }
+}
