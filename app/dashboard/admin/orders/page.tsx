@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 
 export default function Orders() {
-const [orders, setOrders] = useState<any>({});
+  const [orders, setOrders] = useState<any[]>([]);
 
   useEffect(() => {
     // Connect to the SSE endpoint
@@ -15,7 +15,7 @@ const [orders, setOrders] = useState<any>({});
       console.log('New order received:', newOrder);
 
       // Update the orders state
-      setOrders((prevOrders: any) => [newOrder, ...prevOrders]);
+      setOrders((prevOrders: any[]) => [newOrder, ...prevOrders]);
 
       // Trigger the printer (assuming you have a print function)
       printOrderSlip(newOrder);
