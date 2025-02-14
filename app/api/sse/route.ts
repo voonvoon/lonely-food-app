@@ -5,6 +5,14 @@ export const config = {
   runtime: 'edge',
 };
 
+let currentMessage = 'awaiting new order';
+
+// Function to handle webhook events
+export function handleWebhook(event: any) {
+  // Update the message based on the webhook event data
+  currentMessage = event.message || 'awaiting new order';
+}
+
 export function GET(req: Request) {
   // Set headers for SSE
   const headers = new Headers({
@@ -23,7 +31,8 @@ export function GET(req: Request) {
       console.log(`Client connected: ${clientId}`);
 
       // Send an initial message to the client
-      controller.enqueue(`data: ${JSON.stringify({ message: 'awaiting new order' })}\n\n`);
+      //controller.enqueue(`data: ${JSON.stringify({ message: 'awaiting new order' })}\n\n`);
+      controller.enqueue(`data: ${JSON.stringify({ message: currentMessage })}\n\n`);
       // let counter = 0;
 
       // // Send a message to the client every second with an incrementing number
