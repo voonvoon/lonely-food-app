@@ -18,7 +18,7 @@ export default function Orders() {
         if (ordersRef.current) {
           const newOrderElement = document.createElement('li');
           newOrderElement.className = 'border p-2 my-2 rounded bg-gray-100';
-          newOrderElement.innerHTML = `<p><strong>Number:</strong> ${newOrder.number}</p>`;
+          newOrderElement.innerHTML = `<p><strong>Status:</strong> ${newOrder.message}</p>`;
           ordersRef.current.prepend(newOrderElement);
         }
 
