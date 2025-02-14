@@ -1,17 +1,11 @@
 import { NextResponse } from 'next/server';
 import { addClient, removeClient } from './sseUtils';
+import {  getCurrentMessage } from './webhookHandler';
 
 export const config = {
   runtime: 'edge',
 };
 
-let currentMessage = 'awaiting new order';
-
-// Function to handle webhook events
-export function handleWebhook(event: any) {
-  // Update the message based on the webhook event data
-  currentMessage = event.message || 'awaiting new order';
-}
 
 export function GET(req: Request) {
   // Set headers for SSE
@@ -32,7 +26,7 @@ export function GET(req: Request) {
 
       // Send an initial message to the client
       //controller.enqueue(`data: ${JSON.stringify({ message: 'awaiting new order' })}\n\n`);
-      controller.enqueue(`data: ${JSON.stringify({ message: currentMessage })}\n\n`);
+      controller.enqueue(`data: ${JSON.stringify({ message: getCurrentMessage() })}\n\n`);
       // let counter = 0;
 
       // // Send a message to the client every second with an incrementing number

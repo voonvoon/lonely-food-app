@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import CryptoJS from "crypto-js";
 import querystring from "querystring";
 import { sendNewOrderEvent } from "../sse/sseUtils";
-import { handleWebhook } from "../sse/route";
+import { handleWebhook } from "../sse/webhookHandler";
 
 import { db } from "@/db";
 
