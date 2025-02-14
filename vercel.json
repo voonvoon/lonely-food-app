@@ -2,7 +2,7 @@
   "functions": {
     "app/api/sse/route.ts": {
       "runtime": "vercel-edge@1.0.0",
-      "maxDuration": 900
+      "maxDuration": 60
     }
   }
 }
