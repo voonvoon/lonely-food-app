@@ -13,25 +13,31 @@ export default function Orders() {
 
       eventSource.onmessage = (event) => {
         const newOrder = JSON.parse(event.data);
+
+        // Ignore heartbeat messages
+        if (newOrder.type === 'heartbeat') {
+          return;
+        }
+
         console.log('New order received:', newOrder);
 
         if (ordersRef.current) {
           const newOrderElement = document.createElement('li');
-            newOrderElement.className = 'border p-2 my-2 rounded bg-gray-100 flex justify-between items-center';
-            newOrderElement.innerHTML = `
-            <span><strong>Status:</strong> ${newOrder.message}</span>
-            <span><strong>Order ID:</strong> ${newOrder.orderId}</span>
-            <span><strong>Total Amount:</strong> ${newOrder.totalAmount}</span>
-            <span><strong>Order By:</strong> ${newOrder.name}</span>
-            `;
-            ordersRef.current.prepend(newOrderElement);
+          newOrderElement.className = 'border p-2 my-2 rounded bg-yellow-200 flex justify-between items-center';
+          newOrderElement.innerHTML = `
+            <span class="font-light"><strong>Status:</strong> ${newOrder.message}</span>
+            <span class="font-light"><strong>Order ID:</strong> ${newOrder.orderId}</span>
+            <span class="font-light"><strong>Total Amount:</strong> ${newOrder.totalAmount}</span>
+            <span class="font-light"><strong>Order By:</strong> ${newOrder.name}</span>
+          `;
+          ordersRef.current.prepend(newOrderElement);
 
-          // Remove the order element after 5 seconds
+          // Remove the order element after 10 seconds
           setTimeout(() => {
             if (ordersRef.current && ordersRef.current.contains(newOrderElement)) {
               ordersRef.current.removeChild(newOrderElement);
             }
-          }, 5000);
+          }, 10000);
         }
 
         printOrderSlip(newOrder);
