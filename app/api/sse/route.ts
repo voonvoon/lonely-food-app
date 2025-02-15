@@ -59,6 +59,7 @@ export function GET(req: Request) {
       watchOrders(controller);
 
       // Send a heartbeat every 30 seconds to keep the connection alive
+      //prevent err:Vercel Runtime Timeout Error: Task timed out after 60 seconds
       const heartbeat = setInterval(() => {
         controller.enqueue(`data: {"type": "heartbeat"}\n\n`);
       }, 30000);
