@@ -6,6 +6,7 @@ export const config = {
   runtime: "edge",
 };
 
+// Set up MongoDB connection then listen for new orders
 const uri = process.env.DATABASE_URL;
 if (!uri) {
   throw new Error("MONGODB_URI is not defined");
@@ -20,24 +21,16 @@ async function watchOrders(controller: ReadableStreamDefaultController) {
 
     const changeStream = orders.watch();
 
-    // changeStream.on("change", (next) => {
-    //   if (next.operationType === "insert") {
-    //     controller.enqueue(
-    //       `data: ${JSON.stringify({ message:"you have a new order!" })}\n\n`
-    //     );
-    //   }
-    // });
-
     changeStream.on("change", (next) => {
       if (next.operationType === "insert") {
-      const newOrder = next.fullDocument;//next:next document in the stream and fullDocument contains the entire document that was changed
-      const msg = {
-        message: "Congrat! You have a new order!",
-        orderId: newOrder.orderid,
-        totalAmount: newOrder.totalAmount,
-        name: newOrder.name,
-      };
-      controller.enqueue(`data: ${JSON.stringify(msg)}\n\n`);
+        const newOrder = next.fullDocument;
+        const msg = {
+          message: "Congrat! You have a new order!",
+          orderId: newOrder.orderid,
+          totalAmount: newOrder.totalAmount,
+          name: newOrder.name,
+        };
+        controller.enqueue(`data: ${JSON.stringify(msg)}\n\n`);
       }
     });
   } catch (err) {
@@ -51,7 +44,7 @@ export function GET(req: Request) {
     "Content-Type": "text/event-stream",
     "Cache-Control": "no-cache",
     Connection: "keep-alive",
-    "Access-Control-Allow-Origin": "*", // Add CORS header if needed
+    "Access-Control-Allow-Origin": "*",
   });
 
   const stream = new ReadableStream({
@@ -65,8 +58,14 @@ export function GET(req: Request) {
       // Watch for new orders in MongoDB
       watchOrders(controller);
 
+      // Send a heartbeat every 30 seconds to keep the connection alive
+      const heartbeat = setInterval(() => {
+        controller.enqueue(`data: {"type": "heartbeat"}\n\n`);
+      }, 30000);
+
       // Clean up when the connection closes
       req.signal.addEventListener("abort", () => {
+        clearInterval(heartbeat);
         removeClient(clientId);
         console.log(`Client disconnected: ${clientId}`);
       });
