@@ -25,10 +25,7 @@ export function GET(req: Request) {
 
       // Send an initial message to the client
       //controller.enqueue(`data: ${JSON.stringify({ message: 'awaiting new order' })}\n\n`);
-      const message = getCurrentMessage();
-      if (message !== "") {
-        controller.enqueue(`data: ${JSON.stringify({ message })}\n\n`);
-      }
+      //controller.enqueue(`data: ${JSON.stringify({ message: getCurrentMessage() })}\n\n`);
       // let counter = 0;
 
       // // Send a message to the client every second with an incrementing number
@@ -38,15 +35,15 @@ export function GET(req: Request) {
       // }, 1000);
 
       // Send a heartbeat every 30 seconds to keep the connection alive
-      // const heartbeatInterval = setInterval(() => {
-      //   controller.enqueue(
-      //     `data: ${JSON.stringify({ message: getCurrentMessage() })}\n\n`
-      //   );
-      // }, 10000);
+      const heartbeatInterval = setInterval(() => {
+        controller.enqueue(
+          `data: ${JSON.stringify({ message: getCurrentMessage() })}\n\n`
+        );
+      }, 1000);
 
       // Clean up when the connection closes
       req.signal.addEventListener("abort", () => {
-        //clearInterval(heartbeatInterval);
+        clearInterval(heartbeatInterval);
         //clearInterval(intervalId);
         removeClient(clientId);
         console.log(`Client disconnected: ${clientId}`);
