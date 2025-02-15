@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import CryptoJS from "crypto-js";
 import querystring from "querystring";
-import { sendNewOrderEvent } from "../sse/sseUtils";
-import { handleWebhook } from "../sse/webhookHandler";
+//import { sendNewOrderEvent } from "../sse/sseUtils";
+//import { handleWebhook } from "../sse/webhookHandler";
 
 import { db } from "@/db";
 
@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
       //console.log("data--------------------------->>>>>", data);
       console.log("extraP--------------------------->>>>>", extraP);
       //sendNewOrderEvent({ newOrder: true });
-      handleWebhook({ message: "New order received" });
+      //handleWebhook({ message: "New order received" });
     } else {
       console.log("Transaction failed");
     }
