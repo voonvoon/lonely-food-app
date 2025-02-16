@@ -46,9 +46,9 @@ export function GET(req: Request) {
     Connection: "keep-alive",
     "Access-Control-Allow-Origin": "*",
   });
-
+//ReadableStream:built-in web API represents readable stream of data.
   const stream = new ReadableStream({
-    start(controller) {
+    start(controller) { //controller: handles incoming requests and returns responses in a web application
       const clientId = Date.now();
       const newClient = { id: clientId, controller };
       addClient(newClient);
@@ -78,6 +78,7 @@ export function GET(req: Request) {
     },
   });
 
+  //below to construct and return an HTTP(headers) response with a body (the stream) and headers
   return new Response(stream, { headers });
 }
 
