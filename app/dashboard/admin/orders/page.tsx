@@ -77,9 +77,10 @@ export default function Orders() {
       if (!reconnectInterval) {
         reconnectInterval = setInterval(() => {
           console.log("Proactively reconnecting to SSE...");
-          if (eventSource?.readyState === EventSource.CLOSED) {
-            connectToSSE();
+          if (eventSource) {
+            eventSource.close();
           }
+          connectToSSE();
         }, 55000);
       }
     };
