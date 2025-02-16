@@ -6,6 +6,8 @@ export const config = {
   runtime: "edge",
 };
 
+//mongodb+srv://<username>:<password>@cluster0.mongodb.net/mydatabase?retryWrites=true&w=majority&ssl=true
+
 // Set up MongoDB connection then listen for new orders
 const uri = process.env.DATABASE_URL;
 if (!uri) {
