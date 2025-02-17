@@ -1,9 +1,27 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { getOrders, deleteOrderById } from "@/actions/order";
 
 export default function Orders() {
   const ordersRef = useRef<HTMLUListElement>(null);
+  const [page, setPage] = useState(1);
+  const [orders, setOrders] = useState<any[]>([]);
+
+  console.log("Orders:", orders);
+
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const newOrders = await getOrders(page);
+        setOrders((prevOrders) => [...prevOrders, ...newOrders]);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
+    };
+
+    fetchOrders();
+  }, [page]);
 
   useEffect(() => {
     let eventSource: EventSource | null = null;
@@ -99,10 +117,43 @@ export default function Orders() {
     console.log("Printing order:", order);
   };
 
+  const handleDeleteOrder = async (orderId: string) => {
+    try {
+      await deleteOrderById(orderId);
+      setOrders((prevOrders) => prevOrders.filter(order => order.orderid !== orderId));
+    } catch (error) {
+      console.error("Error deleting order:", error);
+    }
+  };
+
+  const loadMoreOrders = () => {
+    setPage((prevPage) => prevPage + 1);
+  };
+
   return (
-    <div className="p-4">
+    <div className="p-4 flex justify-center items-center flex-col">
       <h1 className="text-2xl font-bold mb-4">All Orders</h1>
-      <ul ref={ordersRef}>{/* Orders will be injected here */}</ul>
+      <ul ref={ordersRef} className="grid grid-cols-4 gap-4">
+        {orders.map((order) => (
+          <li key={order.orderid} className="p-4 bg-blue-200 rounded-lg shadow-md flex flex-col justify-center items-center">
+            <span className="font-light"><strong>Order ID:</strong> {order.orderid}</span>
+            <span className="font-light"><strong>Total Amount:</strong> {order.totalAmount}</span>
+            <span className="font-light"><strong>Email:</strong> {order.email}</span>
+            <span className="font-light"><strong>Phone:</strong> {order.phone}</span>
+            <span className="font-light"><strong>Order By:</strong> {order.name}</span>
+            <span className="font-light"><strong>Date:</strong> {new Date(order.createdAt).toLocaleString()}</span>
+            <ul className="mt-2">
+              {order.orderItems.map((item: { title: string; price: number; number: number }) => (
+                <li key={item.title} className="font-light">
+                  <strong>Item:</strong> {item.title}, <strong>Price:</strong> {item.price}, <strong>Qty:</strong> {item.number}
+                </li>
+              ))}
+            </ul>
+            <button onClick={() => handleDeleteOrder(order.orderid)} className="mt-2 p-2 bg-red-500 text-white rounded">Delete Order</button>
+          </li>
+        ))}
+      </ul>
+      <button onClick={loadMoreOrders} className="mt-4 p-2 bg-blue-500 text-white rounded w-full max-w-md mx-auto">Load More</button>
     </div>
   );
 }
