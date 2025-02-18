@@ -8,19 +8,19 @@ export default function Orders() {
   const [page, setPage] = useState(1);
   const [orders, setOrders] = useState<any[]>([]);
 
-  console.log("Orders:", orders);
+  const fetchOrders = async (page: number) => {
+    try {
+      const newOrders = await getOrders(page);
+      setOrders((prevOrders) =>
+        page === 1 ? newOrders : [...prevOrders, ...newOrders]
+      );
+    } catch (error) {
+      console.error("Error fetching orders:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        const newOrders = await getOrders(page);
-        setOrders((prevOrders) => [...prevOrders, ...newOrders]);
-      } catch (error) {
-        console.error("Error fetching orders:", error);
-      }
-    };
-
-    fetchOrders();
+    fetchOrders(page);
   }, [page]);
 
   useEffect(() => {
@@ -48,7 +48,7 @@ export default function Orders() {
           newOrderElement.className =
             "p-2 my-2 bg-pink-300 flex justify-between items-center transition-opacity duration-500 ease-in-out opacity-0";
           newOrderElement.innerHTML = `
-            <span class="font-light">🔊🔊🔊${newOrder.message}🔊🔊🔊</span>
+            <span class="font-light">${newOrder.message}🔊🔊🔊</span>
             <span class="font-light"><strong>Order ID:</strong> ${newOrder.orderId}</span>
             <span class="font-light"><strong>Total Amount:</strong> ${newOrder.totalAmount}</span>
             <span class="font-light"><strong>Order By:</strong> ${newOrder.name}</span>
@@ -80,6 +80,10 @@ export default function Orders() {
         }
 
         printOrderSlip(newOrder);
+
+        // Re-fetch orders for the first page when new oreder is received
+        setPage(1);
+        fetchOrders(1); // put 1 cuz can't rely on setPage to finish updating the state
       };
 
       eventSource.onerror = (err) => {
@@ -120,7 +124,9 @@ export default function Orders() {
   const handleDeleteOrder = async (orderId: string) => {
     try {
       await deleteOrderById(orderId);
-      setOrders((prevOrders) => prevOrders.filter(order => order.orderid !== orderId));
+      setOrders((prevOrders) =>
+        prevOrders.filter((order) => order.orderid !== orderId)
+      );
     } catch (error) {
       console.error("Error deleting order:", error);
     }
@@ -132,28 +138,76 @@ export default function Orders() {
 
   return (
     <div className="p-4 flex justify-center items-center flex-col">
+      <span
+        ref={ordersRef}
+        className="flex justify-center items-center bg-yellow-200 text-red-600 rounded"
+      ></span>
       <h1 className="text-2xl font-bold mb-4">All Orders</h1>
-      <ul ref={ordersRef} className="grid grid-cols-4 gap-4">
-        {orders.map((order) => (
-          <li key={order.orderid} className="p-4 bg-blue-200 rounded-lg shadow-md flex flex-col justify-center items-center">
-            <span className="font-light"><strong>Order ID:</strong> {order.orderid}</span>
-            <span className="font-light"><strong>Total Amount:</strong> {order.totalAmount}</span>
-            <span className="font-light"><strong>Email:</strong> {order.email}</span>
-            <span className="font-light"><strong>Phone:</strong> {order.phone}</span>
-            <span className="font-light"><strong>Order By:</strong> {order.name}</span>
-            <span className="font-light"><strong>Date:</strong> {new Date(order.createdAt).toLocaleString()}</span>
-            <ul className="mt-2">
-              {order.orderItems.map((item: { title: string; price: number; number: number }) => (
-                <li key={item.title} className="font-light">
-                  <strong>Item:</strong> {item.title}, <strong>Price:</strong> {item.price}, <strong>Qty:</strong> {item.number}
-                </li>
-              ))}
-            </ul>
-            <button onClick={() => handleDeleteOrder(order.orderid)} className="mt-2 p-2 bg-red-500 text-white rounded">Delete Order</button>
-          </li>
-        ))}
-      </ul>
-      <button onClick={loadMoreOrders} className="mt-4 p-2 bg-blue-500 text-white rounded w-full max-w-md mx-auto">Load More</button>
+      <table className="min-w-full bg-white">
+        <thead>
+            <tr className="bg-gray-100">
+            <th className="py-2 text-left">Order ID</th>
+            <th className="py-2 text-left">Total Amount</th>
+            <th className="py-2 text-left">Email</th>
+            <th className="py-2 text-left">Phone</th>
+            <th className="py-2 text-left">Order By</th>
+            <th className="py-2 text-left">Date</th>
+            <th className="py-2 text-left">Items</th>
+            <th className="py-2 text-left">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+          {orders.map((order) => (
+            <tr key={order.orderid} className="border-t">
+              <td className="py-2 ">{order.orderid}</td>
+              <td className="py-2">{order.totalAmount}</td>
+              <td className="py-2">{order.email}</td>
+              <td className="py-2">{order.phone}</td>
+              <td className="py-2">{order.name}</td>
+              <td className="py-2">
+                {new Date(order.createdAt).toLocaleString()}
+              </td>
+              <td className="py-2">
+                <ul>
+                  {order.orderItems.map(
+                    (item: {
+                      title: string;
+                      price: number;
+                      number: number;
+                    }) => (
+                      <li key={item.title} className="flex justify-between">
+                        <span>
+                          <strong>Item:</strong> {item.title}
+                        </span>
+                        <span>
+                          <strong>Price:</strong> {item.price}
+                        </span>
+                        <span>
+                          <strong>Qty:</strong> {item.number}
+                        </span>
+                      </li>
+                    )
+                  )}
+                </ul>
+              </td>
+              <td className="py-2">
+                <button
+                  onClick={() => handleDeleteOrder(order.orderid)}
+                  className="p-2 bg-red-500 text-white rounded"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <button
+        onClick={loadMoreOrders}
+        className="mt-4 p-2 bg-blue-500 text-white rounded w-full max-w-md mx-auto"
+      >
+        Load More
+      </button>
     </div>
   );
 }
