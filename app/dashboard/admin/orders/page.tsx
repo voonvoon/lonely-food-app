@@ -52,7 +52,7 @@ export default function Orders() {
         if (ordersRef.current) {
           const newOrderElement = document.createElement("li");
           newOrderElement.className =
-            "p-2 my-2 bg-pink-300 flex justify-between items-center transition-opacity duration-500 ease-in-out opacity-0";
+            "p-2 my-2 flex justify-between items-center transition-opacity duration-500 ease-in-out opacity-0";
           newOrderElement.innerHTML = `
             <span class="font-light">${newOrder.message}🔊🔊🔊</span>
             <span class="font-light"><strong>Order ID:</strong> ${newOrder.orderId}</span>
@@ -101,8 +101,8 @@ export default function Orders() {
         // starting from 1 sec and doubling each time up to a max of 30 sec to avoid overwhelming the server with frequent requests.
         reconnectAttempts += 1;
         const reconnectDelay = Math.min(1000 * reconnectAttempts, 30000); // Exponential backoff with a max delay of 30 seconds
-        console.log('reconnectAttempts:', reconnectAttempts);
-        console.log('reconnectDelay:', reconnectDelay);
+        console.log("reconnectAttempts:", reconnectAttempts);
+        console.log("reconnectDelay:", reconnectDelay);
 
         setTimeout(() => {
           console.log("Reconnecting to SSE...");
@@ -156,13 +156,18 @@ export default function Orders() {
         ref={ordersRef}
         className="flex justify-center items-center bg-blue-500 text-white rounded p-2"
       ></span>
-      <h1 className="text-2xl font-bold mb-4">All Orders</h1>
-      <div className={`p-2 rounded ${isConnected ? 'bg-green-500' : 'bg-red-500'} text-white`}>
-        {isConnected ? 'Connected' : 'Disconnected'}
+      <div
+        className={`mb-2 p-1 rounded ${
+          isConnected ? "bg-green-500" : "bg-red-500"
+        } text-white`}
+      >
+        {isConnected ? "live" : "offline"}
       </div>
+      <h1 className="text-2xl font-bold mb-4">All Orders</h1>
+
       <table className="min-w-full bg-white">
         <thead>
-            <tr className="bg-gray-100">
+          <tr className="bg-gray-100">
             <th className="py-2 text-left">Order ID</th>
             <th className="py-2 text-left">Total Amount</th>
             <th className="py-2 text-left">Email</th>
@@ -171,7 +176,7 @@ export default function Orders() {
             <th className="py-2 text-left">Date</th>
             <th className="py-2 text-left">Items</th>
             <th className="py-2 text-left">Actions</th>
-            </tr>
+          </tr>
         </thead>
         <tbody>
           {orders.map((order) => (
