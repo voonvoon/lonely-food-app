@@ -7,6 +7,7 @@ export default function Orders() {
   const ordersRef = useRef<HTMLUListElement>(null);
   const [page, setPage] = useState(1);
   const [orders, setOrders] = useState<any[]>([]);
+  const [isConnected, setIsConnected] = useState(false); // State for connection status
 
   const fetchOrders = async (page: number) => {
     try {
@@ -34,6 +35,10 @@ export default function Orders() {
       }
 
       eventSource = new EventSource("/api/sse");
+
+      eventSource.onopen = () => {
+        setIsConnected(true); // Set connection status to true when connected
+      };
 
       eventSource.onmessage = (event) => {
         const newOrder = JSON.parse(event.data);
@@ -82,7 +87,7 @@ export default function Orders() {
 
         printOrderSlip(newOrder);
 
-        // Re-fetch orders for the first page when new oreder is received
+        // Re-fetch orders for the first page when new order is received
         setPage(1);
         fetchOrders(1); // put 1 cuz can't rely on setPage to finish updating the state
       };
@@ -90,11 +95,14 @@ export default function Orders() {
       eventSource.onerror = (err) => {
         console.error("SSE error:", err);
         eventSource?.close();
+        setIsConnected(false); // Set connection status to false when an error occurs
 
+        // The exponential backoff strategy ++ delay between reconnection attempts.
+        // starting from 1 sec and doubling each time up to a max of 30 sec to avoid overwhelming the server with frequent requests.
         reconnectAttempts += 1;
         const reconnectDelay = Math.min(1000 * reconnectAttempts, 30000); // Exponential backoff with a max delay of 30 seconds
-        console.log('reconnectAttempts--------------------------------->',reconnectAttempts);
-        console.log('reconnectDelay--------------------------------->',reconnectDelay);
+        console.log('reconnectAttempts:', reconnectAttempts);
+        console.log('reconnectDelay:', reconnectDelay);
 
         setTimeout(() => {
           console.log("Reconnecting to SSE...");
@@ -146,9 +154,12 @@ export default function Orders() {
     <div className="p-4 flex justify-center items-center flex-col">
       <span
         ref={ordersRef}
-        className="flex justify-center items-center bg-yellow-200 text-red-600 rounded"
+        className="flex justify-center items-center bg-blue-500 text-white rounded p-2"
       ></span>
       <h1 className="text-2xl font-bold mb-4">All Orders</h1>
+      <div className={`p-2 rounded ${isConnected ? 'bg-green-500' : 'bg-red-500'} text-white`}>
+        {isConnected ? 'Connected' : 'Disconnected'}
+      </div>
       <table className="min-w-full bg-white">
         <thead>
             <tr className="bg-gray-100">
