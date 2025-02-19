@@ -60,11 +60,11 @@ export function GET(req: Request) {
       // Watch for new orders in MongoDB
       watchOrders(controller);
 
-      // Send a heartbeat every 50 seconds to keep the connection alive
+      // Send a heartbeat every 20 seconds to keep the connection alive
       //prevent err:Vercel Runtime Timeout Error: Task timed out after 60 seconds
       const heartbeat = setInterval(() => {
         controller.enqueue(`data: {"type": "heartbeat"}\n\n`);
-      }, 25000);
+      }, 20000);
 
       // Clean up when the connection closes
       req.signal.addEventListener("abort", () => {
