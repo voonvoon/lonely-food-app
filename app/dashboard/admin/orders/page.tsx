@@ -26,6 +26,7 @@ export default function Orders() {
   useEffect(() => {
     let eventSource: EventSource | null = null;
     let reconnectInterval: NodeJS.Timeout | null = null;
+    let reconnectAttempts = 0;
 
     const connectToSSE = () => {
       if (eventSource) {
@@ -90,10 +91,15 @@ export default function Orders() {
         console.error("SSE error:", err);
         eventSource?.close();
 
+        reconnectAttempts += 1;
+        const reconnectDelay = Math.min(1000 * reconnectAttempts, 30000); // Exponential backoff with a max delay of 30 seconds
+        console.log('reconnectAttempts--------------------------------->',reconnectAttempts);
+        console.log('reconnectDelay--------------------------------->',reconnectDelay);
+
         setTimeout(() => {
           console.log("Reconnecting to SSE...");
           connectToSSE();
-        }, 1000);
+        }, reconnectDelay);
       };
 
       if (!reconnectInterval) {
