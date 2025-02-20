@@ -25,6 +25,7 @@ export default function Orders() {
   }, [page]);
 
   useEffect(() => {
+    const audio = new Audio('/sounds/coin.mp3');
     let eventSource: EventSource | null = null;
     let reconnectInterval: NodeJS.Timeout | null = null;
     let reconnectAttempts = 0;
@@ -49,14 +50,17 @@ export default function Orders() {
 
         console.log("New order received:", newOrder);
 
+        // Play the sound when a new order is received
+        audio.play();
+
         if (ordersRef.current) {
           const newOrderElement = document.createElement("li");
           newOrderElement.className =
             "p-2 my-2 flex justify-between items-center transition-opacity duration-500 ease-in-out opacity-0";
           newOrderElement.innerHTML = `
-            <span class="font-light">${newOrder.message}🔊🔊🔊</span>
-            <span class="font-light"><strong>Order ID:</strong> ${newOrder.orderId}</span>
-            <span class="font-light"><strong>Total Amount:</strong> ${newOrder.totalAmount}</span>
+            <span class="font-light mr-4">${newOrder.message}🔊🔊🔊</span>
+            <span class="font-light mr-4"><strong>Order ID:</strong> ${newOrder.orderId}</span>
+            <span class="font-light mr-4"><strong>Total Amount:</strong> ${newOrder.totalAmount}</span>
             <span class="font-light"><strong>Order By:</strong> ${newOrder.name}</span>
             `;
           ordersRef.current.prepend(newOrderElement);
@@ -152,18 +156,21 @@ export default function Orders() {
 
   return (
     <div className="p-4 flex justify-center items-center flex-col">
-      <span
-        ref={ordersRef}
-        className="flex justify-center items-center bg-blue-500 text-white rounded p-2"
-      ></span>
-      <div
-        className={`mb-2 p-1 rounded ${
-          isConnected ? "bg-green-500" : "bg-red-500"
-        } text-white`}
-      >
-        {isConnected ? "live" : "offline"}
+      <div className="flex items-center justify-between mb-2 w-full">
+        <h1 className="text-2xl font-bold">All Orders</h1>
+        <span
+          ref={ordersRef}
+          className="flex justify-center items-center bg-blue-500 text-white rounded"
+        ></span>
+        <div className="flex items-center">
+          <span className="mr-2">listening to live:</span>
+          <span
+            className={`w-3 h-3 rounded-full ${
+              isConnected ? "bg-green-500" : "bg-red-500"
+            }`}
+          ></span>
+        </div>
       </div>
-      <h1 className="text-2xl font-bold mb-4">All Orders</h1>
 
       <table className="min-w-full bg-white">
         <thead>
