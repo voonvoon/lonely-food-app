@@ -84,20 +84,21 @@ const MenuNavbar: React.FC = () => {
   return (
     <div className="container mx-auto">
       <ul className="bg-white shadow-md rounded-lg flex flex-col space-y-2 cursor-pointer ">
-        <h1 className="text-lg font-semibold mt-3 mb-3 text-center underline">Categories</h1>
+        {/* <h1 className="text-lg font-semibold mt-3 mb-3 text-center underline">
+          Categories
+        </h1> */}
         {/* <hr className="border-gray-300 my-4 mb-12" /> */}
         <div
-          className="flex flex-col md:grid-cols-4 gap-1 overflow-y-auto px-28 py-8 min-h-screen"
+          className="flex flex-col md:grid-cols-4 gap-1 overflow-y-auto px-12 py-12 min-h-screen"
           style={{ maxHeight: "calc(100vh - 50px)" }}
         >
           {orderedCategories.length > 0 ? (
             orderedCategories.map((category: any, index: any) => (
               <div key={index}>
-                <li className="hover:text-yellow-500 text-lg">
+                <li className="hover:text-yellow-500 text-lg px-2">
                   <div className="flex flex-col items-center justify-center">
-                    <div className="flex items-center p-2 space-x-2">
-                      <span className="text-lg font-semibold whitespace-nowrap overflow-hidden text-ellipsis">
-                        {/* {category.name} */}
+                    <div className="flex items-start p-2 space-x-2">
+                      <span className="text-sm font-semibold whitespace-nowrap overflow-hidden text-ellipsis sm:text-lg">
                         <button
                           key={category.name}
                           onClick={() => {
@@ -113,7 +114,7 @@ const MenuNavbar: React.FC = () => {
                     </div>
                   </div>
                 </li>
-                <div className="flex flex-col ">
+                <div className="flex flex-col items-center">
                   {clickedCategory === category.id &&
                     subCats
                       .filter(
@@ -123,7 +124,7 @@ const MenuNavbar: React.FC = () => {
                       .map((filteredSubCat: any, subIndex: any) => (
                         <ul
                           key={subIndex}
-                          className="mt-2 font-extralight text-sm list-inside"
+                          className="mt-2 font-extralight text-xs list-inside"
                           style={{
                             animation: `fadeIn 0.9s ease-in-out ${
                               subIndex * 0.1

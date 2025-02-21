@@ -7,13 +7,13 @@ interface MenuProps {
 
 export default async function Menu({ children }: MenuProps) {
   return (
-    <div className="flex min-h-screen flex-col sm:flex-row">
-      <div className="w-full md:w-1/4">
+    <div className="grid min-h-screen grid-cols-10">
+    <div className="col-span-3 sm:col-span-2">
       <MenuNavbar />
-      </div>
-      <div className="w-full md:w-3/4">
-      {children}
-      </div>
     </div>
+    <div className="col-span-7 sm:col-span-8">
+      {children}
+    </div>
+  </div>
   );
 }
