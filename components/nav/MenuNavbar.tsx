@@ -97,7 +97,8 @@ const MenuNavbar: React.FC = () => {
               <div key={index}>
                 <li className="hover:text-yellow-500 text-lg px-2">
                   <div className="flex flex-col items-center justify-center">
-                    <div className="flex items-start p-2 space-x-2">
+                    <div className="flex flex-col md:flex-row items-center justify-center p-2 space-x-2">
+                    <div>{categoryIcons[category.slug]}</div>
                       <span className="text-sm font-semibold whitespace-nowrap overflow-hidden text-ellipsis sm:text-lg">
                         <button
                           key={category.name}
@@ -110,11 +111,11 @@ const MenuNavbar: React.FC = () => {
                         </button>
                       </span>
 
-                      <div>{categoryIcons[category.slug]}</div>
+                     
                     </div>
                   </div>
                 </li>
-                <div className="flex flex-col items-center">
+                <div className="flex flex-col items-center justify-center">
                   {clickedCategory === category.id &&
                     subCats
                       .filter(
@@ -124,12 +125,13 @@ const MenuNavbar: React.FC = () => {
                       .map((filteredSubCat: any, subIndex: any) => (
                         <ul
                           key={subIndex}
-                          className="mt-2 font-extralight text-xs list-inside"
+                          className="mt-3 font-extralight text-sm list-inside flex justify-center"
                           style={{
-                            animation: `fadeIn 0.9s ease-in-out ${
-                              subIndex * 0.1
-                            }s forwards`,
-                            opacity: 0,
+                          animation: `fadeIn 0.9s ease-in-out ${
+                            subIndex * 0.1
+                          }s forwards`,
+                          opacity: 0,
+                          whiteSpace: "nowrap",
                           }}
                         >
                           <li
@@ -155,7 +157,9 @@ const MenuNavbar: React.FC = () => {
               </div>
             ))
           ) : (
-            <Skeleton count={8} height={40} />
+            <div className="flex justify-center items-center">
+              <Skeleton count={10} height={40} width={70} />
+            </div>
           )}
         </div>
       </ul>

@@ -125,7 +125,7 @@ export default function MenuPage() {
         ) : null}
         {itemsBySubCategory.map((category: any) => (
           <div key={category.id} id={category.name}>
-            <h2 className="text-2xl text-center p-2 mt-2 rounded-md bg-gray-300">
+            <h2 className="text-2xl text-center p-2 mt-2 rounded-md bg-gray-100">
               {category.items.length === 0 ? "" : category.name}
             </h2>
             <div className="flex flex-col gap-2">
@@ -137,10 +137,10 @@ export default function MenuPage() {
                       id={subCategory.subCategoryName}
                       className="w-full"
                     >
-                      <h3 className="text-md mb-2 mt-4 w-full border-b-2 border-gray-200 pb-1">
+                      <h3 className="text-md mb-2 mt-4 w-full border-b-2 border-gray-100 pb-1">
                         {subCategory.subCategoryName}
                       </h3>
-                      <div className="flex flex-wrap gap-2 w-full">
+                      <div className=" gap-2 w-full grid grid-cols-2 sm:flex sm:flex-wrap">
                         {subCategory.items.map((item: any) => (
                            <Link href={`/item-page?id=${item.id}`} key={item.id}>
                             <ItemCard

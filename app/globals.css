@@ -23,3 +23,10 @@
   }
 
   /* End of scroll bar styling */
+
+
+  @media (max-width: 500px) {
+    .custom-hidden {
+      display: none;
+    }
+  }
