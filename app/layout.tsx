@@ -14,6 +14,7 @@ import { ItemProvider } from "@/context/createItem";
 import { MenuProvider } from "@/context/menu";
 import { OrderProvider } from "@/context/order";
 import { useContext } from "react";
+import Footer from "@/components/footer";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -46,21 +47,22 @@ export default function RootLayout({
     <SessionProvider>
       <html lang="en">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen`}
         >
           <OrderProvider>
-            <MenuProvider>
-              <ItemProvider>
-                <CategoryProvider>
-                  <SubCategoryProvider>
-                    <Toaster />
-                    <Navbar />
-                    {children}
-                  </SubCategoryProvider>
-                </CategoryProvider>
-              </ItemProvider>
-            </MenuProvider>
+        <MenuProvider>
+          <ItemProvider>
+            <CategoryProvider>
+          <SubCategoryProvider>
+            <Toaster />
+            <Navbar />
+            <main className="flex-grow">{children}</main>
+          </SubCategoryProvider>
+            </CategoryProvider>
+          </ItemProvider>
+        </MenuProvider>
           </OrderProvider>
+          <Footer />
         </body>
       </html>
     </SessionProvider>

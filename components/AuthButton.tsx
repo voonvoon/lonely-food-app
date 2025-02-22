@@ -11,9 +11,9 @@ const AuthButton: React.FC<AuthButtonProps> = ({ buttonText }) => {
     <button
       disabled={pending}
       type="submit"
-      className={`w-full p-2 rounded-md ${
-        pending ? "bg-gray-500" : "bg-blue-500"
-      } text-white`}
+      className={`w-full p-2 rounded-md border-2 ${
+      pending ? "bg-gray-200 border-gray-400" : "bg-gray-100 border-gray"
+      } text-black`}
     >
       {pending ? "Loading..." : buttonText}
     </button>

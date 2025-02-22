@@ -39,7 +39,7 @@ const Sidebar: React.FC = () => {
       id="sidebar"
       className={`fixed top-0 right-0 h-full p-8 bg-white shadow-lg transform ${
         isSidebarOpen ? "translate-x-0" : "translate-x-full"
-      } transition-transform duration-300`}
+      } transition-transform duration-300 z-50`}
     >
       <button
         className="absolute top-4 right-4 text-gray-600"
