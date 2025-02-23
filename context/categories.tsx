@@ -26,6 +26,7 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
   //const [categories, setCategories] = useState([]);
   const [categories, setCategories] = useState<any[]>([]); // Specify the type as any[]
   const [pending, setPending] = useState(false);
+  const [activeCategory, setActiveCategory] = useState<string>("");
 
   console.log(
     "see categories from useContext==========================>",
@@ -163,7 +164,7 @@ export const CategoryProvider: React.FC<CategoryProviderProps> = ({
         fetchCategories,
         deleteCategory,
         updateCategory,
-        pending
+        pending,
       }}
     >
       {children}

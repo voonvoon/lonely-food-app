@@ -98,6 +98,7 @@ function MenuPageContent() {
           height={300}
         />
       )}
+      <h1 className="text-2xl font-bold mb-4">{item.title}</h1>
       <QuantitySelector quantity={quantity} setQuantity={setQuantity} />
 
       <button

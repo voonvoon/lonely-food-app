@@ -7,6 +7,7 @@ import {
   ReactPortal,
   useEffect,
   useState,
+  useRef,
 } from "react";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -14,12 +15,16 @@ import { useContext } from "react";
 import { MenuContext } from "@/context/menu";
 import ItemCard from "@/components/items/ItemCard";
 import Link from "next/link";
-
+import { SubCategoryContext } from "@/context/subCategories";
+import { throttle } from "lodash";
 
 export default function MenuPage() {
-  const { fetchAllItem, categories } = useContext(MenuContext);
-  const [items, setItems] = useState([]) as any;
+  const { fetchAllItem, categories, setActiveSubCategory, setActiveCategory } =
+    useContext(MenuContext);
 
+  const { subCats } = useContext(SubCategoryContext);
+  const [items, setItems] = useState([]) as any;
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,12 +39,60 @@ export default function MenuPage() {
     fetchData();
   }, []);
 
-  // Group items by category
-  // If a category name is not found in categoryOrder, it is placed at the end of the list.
-  //The sorting part works by comparing the indices of category names in the categoryOrder array.
-  //This ensures that the categories are ordered according to the predefined sequence in categoryOrder.
-  //If a category name is not found in categoryOrder, it is placed at the end of the list.
+  useEffect(() => {
+    //throttle so the func only called at most once every 200 ms.
+    const handleScroll = throttle(() => {
+      // If the scroll container ref is not set, return early.
+      if (!scrollContainerRef.current) return;
+      // Get the scroll position of the container element.
+      const containerRect = scrollContainerRef.current.getBoundingClientRect();
+      // Calculate the scroll position as the middle of the container.
+      const scrollPosition = containerRect.top + containerRect.bottom / 2;
 
+      let currentCategory = "";
+      let currentSubCategory = "";
+
+      for (const category of categories) {
+        const categoryElement = document.getElementById(category.name);
+        if (categoryElement) {
+          const rect = categoryElement.getBoundingClientRect();
+
+          if (rect.top <= scrollPosition && rect.bottom >= scrollPosition) {
+            currentCategory = category.id;
+            break;
+          }
+        }
+      }
+
+      for (const subCat of subCats) {
+        const subCatElement = document.getElementById(subCat.name);
+        if (subCatElement) {
+          const rect = subCatElement.getBoundingClientRect();
+          if (rect.top <= scrollPosition && rect.bottom >= scrollPosition) {
+            currentSubCategory = subCat.id;
+            break;
+          }
+        }
+      }
+
+      setActiveCategory(currentCategory);
+      setActiveSubCategory(currentSubCategory);
+    }, 200);
+
+    const container = scrollContainerRef.current;
+    if (container) {
+      //calls the handleScroll function whenever the user scrolls within the container.
+      container.addEventListener("scroll", handleScroll);
+    }
+    //Clean up the event listener
+    return () => {
+      if (container) {
+        container.removeEventListener("scroll", handleScroll);
+      }
+    };
+  }, [categories, subCats]);
+
+  // Group items by category
   const categoryOrder = [
     "Starter",
     "Main Course",
@@ -62,10 +115,7 @@ export default function MenuPage() {
       if (indexB === -1) return -1;
       return indexA - indexB;
     })
-    //at this stage, we have grouped items by category
-    //Now we need to group items by sub-category within each category
     .map((category: any) => {
-      //now category is the grouped items by category not the original category
       const groupedItemsBySubCategory = category.items
         .map((item: any) => ({
           ...item,
@@ -80,17 +130,12 @@ export default function MenuPage() {
           return acc;
         }, {});
 
-      //now the output will looks like: {'subCatId': [{item1}, {item2}, {item3}]
-
-      //get the keys of the groupedItemsBySubCategory for distribution process
-      //output:['676ba0b0a83ead9eeac62232', '676bac46a83...
       const getKeySubCategories = Object.keys(groupedItemsBySubCategory);
-      //console.log("groupedItemsBySubCategory----------------------------------->>", groupedItemsBySubCategory);
 
       return {
         ...category,
         itemsBySubCategory: getKeySubCategories.map((subCategory) => ({
-          subCategory, //subCategory is the id of the subCategory
+          subCategory,
           subCategoryName:
             groupedItemsBySubCategory[subCategory][0]?.subCategoryName ||
             "Uncategorized",
@@ -103,18 +148,13 @@ export default function MenuPage() {
     "itemsByCategoryAndSubCategory----------------------------------->>",
     itemsBySubCategory
   );
-  
 
   return (
     <div className="bg-white shadow-md rounded-lg min-h-screen flex flex-col">
-      {/* <h1 className="text-lg font-semibold mt-3 mb-2 text-center underline">
-        Main menu
-      </h1> */}
-      {/* <hr className="border-gray-300 my-4 mb-12" /> */}
       <div
-        //grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2 overflow-y-auto
         className="flex-grow overflow-y-auto gap-2 px-4 py-8"
         style={{ maxHeight: "calc(100vh - 50px)" }}
+        ref={scrollContainerRef}
       >
         {items.length === 0 ? (
           <div className="flex flex-wrap gap-2">
@@ -142,7 +182,7 @@ export default function MenuPage() {
                       </h3>
                       <div className=" gap-2 w-full grid grid-cols-2 sm:flex sm:flex-wrap">
                         {subCategory.items.map((item: any) => (
-                           <Link href={`/item-page?id=${item.id}`} key={item.id}>
+                          <Link href={`/item-page?id=${item.id}`} key={item.id}>
                             <ItemCard
                               key={item.id}
                               images={item.images}
@@ -162,5 +202,3 @@ export default function MenuPage() {
     </div>
   );
 }
-
-

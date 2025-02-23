@@ -1,6 +1,10 @@
 "use Client";
 import { createContext, useState, useContext, ReactNode } from "react";
-import { fetchAllItemAction, fetchAllCategoryAction, fetchSingleItemAction } from "@/actions/item";
+import {
+  fetchAllItemAction,
+  fetchAllCategoryAction,
+  fetchSingleItemAction,
+} from "@/actions/item";
 import toast from "react-hot-toast";
 
 export const MenuContext = createContext<any>(undefined); //<any> indicating the context can hold any type of value.
@@ -10,6 +14,9 @@ interface MenuProviderProps {
 }
 export const MenuProvider: React.FC<MenuProviderProps> = ({ children }) => {
   const [categories, setCategories] = useState([]) as any;
+
+  const [activeCategory, setActiveCategory] = useState<string>("");
+  const [activeSubCategory, setActiveSubCategory] = useState<string>("");
 
   console.log("categories------------------------------------>", categories);
   //fetch all item
@@ -40,7 +47,7 @@ export const MenuProvider: React.FC<MenuProviderProps> = ({ children }) => {
     }
   };
 
-//fetch single item by id
+  //fetch single item by id
   const fetchSingleItem = async (id: string) => {
     try {
       const response = await fetchSingleItemAction(id);
@@ -52,10 +59,7 @@ export const MenuProvider: React.FC<MenuProviderProps> = ({ children }) => {
       console.error("Error fetching item:", error);
       throw new Error("Could not fetch item");
     }
-
-  }
- 
-
+  };
 
   return (
     <MenuContext.Provider
@@ -64,7 +68,11 @@ export const MenuProvider: React.FC<MenuProviderProps> = ({ children }) => {
         fetchAllCategory,
         categories,
         setCategories,
-        fetchSingleItem
+        fetchSingleItem,
+        activeCategory,
+        setActiveCategory,
+        activeSubCategory,
+        setActiveSubCategory,
       }}
     >
       {children}
