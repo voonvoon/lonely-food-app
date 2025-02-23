@@ -1,6 +1,6 @@
 "use client";
 
-import { JSX, useEffect, useState } from "react";
+import { JSX, useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -18,10 +18,17 @@ import { FaFishFins } from "react-icons/fa6";
 const MenuNavbar: React.FC = () => {
   const [clickedCategory, setClickedCategory] = useState<string>("");
 
-  const { fetchAllCategory, categories, setCategories } =
-    useContext(MenuContext);
+  const {
+    fetchAllCategory,
+    categories,
+    setCategories,
+    activeSubCategory,
+    activeCategory,
+  } = useContext(MenuContext);
 
   const { fetchSubCategories, subCats } = useContext(SubCategoryContext);
+
+  //const categoryRefs = useRef<{ [key: string]: HTMLElement | null }>({});
 
   useEffect(() => {
     const fetchData = async () => {
@@ -84,10 +91,6 @@ const MenuNavbar: React.FC = () => {
   return (
     <div className="container mx-auto">
       <ul className="bg-white shadow-md rounded-lg flex flex-col space-y-2 cursor-pointer ">
-        {/* <h1 className="text-lg font-semibold mt-3 mb-3 text-center underline">
-          Categories
-        </h1> */}
-        {/* <hr className="border-gray-300 my-4 mb-12" /> */}
         <div
           className="flex flex-col md:grid-cols-4 gap-1 overflow-y-auto px-12 py-12 min-h-screen"
           style={{ maxHeight: "calc(100vh - 50px)" }}
@@ -95,11 +98,15 @@ const MenuNavbar: React.FC = () => {
           {orderedCategories.length > 0 ? (
             orderedCategories.map((category: any, index: any) => (
               <div key={index}>
-                <li className="hover:text-yellow-500 text-lg px-2">
+                <li
+                  className={`hover:text-yellow-500 text-lg px-2 ${
+                    activeCategory === category.id ? "text-yellow-500" : ""
+                  }`}
+                >
                   <div className="flex flex-col items-center justify-center">
                     <div className="flex flex-col md:flex-row items-center justify-center p-2 space-x-2">
-                    <div>{categoryIcons[category.slug]}</div>
-                      <span className="text-sm font-semibold whitespace-nowrap overflow-hidden text-ellipsis sm:text-lg">
+                      <div>{categoryIcons[category.slug]}</div>
+                      <span className="text-xs font-semibold whitespace-nowrap overflow-hidden text-ellipsis sm:text-lg">
                         <button
                           key={category.name}
                           onClick={() => {
@@ -110,8 +117,6 @@ const MenuNavbar: React.FC = () => {
                           {category.name}
                         </button>
                       </span>
-
-                     
                     </div>
                   </div>
                 </li>
@@ -127,15 +132,19 @@ const MenuNavbar: React.FC = () => {
                           key={subIndex}
                           className="mt-3 font-extralight text-sm list-inside flex justify-center"
                           style={{
-                          animation: `fadeIn 0.9s ease-in-out ${
-                            subIndex * 0.1
-                          }s forwards`,
-                          opacity: 0,
-                          whiteSpace: "nowrap",
+                            animation: `fadeIn 0.9s ease-in-out ${
+                              subIndex * 0.1
+                            }s forwards`,
+                            opacity: 0,
+                            whiteSpace: "nowrap",
                           }}
                         >
                           <li
-                            className="hover:text-yellow-500 transition-transform duration-300 ease-in-out transform hover:scale-105"
+                            className={`hover:text-yellow-500 transition-transform duration-300 ease-in-out transform hover:scale-105 ${
+                              activeSubCategory === filteredSubCat.id
+                                ? "text-yellow-500"
+                                : ""
+                            }`}
                             onClick={() =>
                               handleScrollToSubCategory(filteredSubCat.name)
                             }
@@ -144,7 +153,6 @@ const MenuNavbar: React.FC = () => {
                           </li>
                         </ul>
                       ))}
-                  {/* <style jsx>: This tag is used to write scoped CSS styles within a React component. */}
                   <style jsx>{`
                     @keyframes fadeIn {
                       to {
@@ -152,7 +160,6 @@ const MenuNavbar: React.FC = () => {
                       }
                     }
                   `}</style>
-                  {/* to { opacity: 1; }:final state of the animation. When completes, the element's opacity will be 1 */}
                 </div>
               </div>
             ))
