@@ -28,8 +28,8 @@ const ItemCard: React.FC<ItemCardProps & { price: string }> = ({
       />
       )}
       <div className="flex flex-col items-center px-3 py-1">
-      <div className="text-lg mt-2">RM{price}</div>
-      <div className="font-bold text-md sm:text-lg text-center">{title}</div>
+      <div className="text-sm mt-2 sm:text-lg font-thin">RM{price}</div>
+      <div className="font-bold text-sm sm:text-lg text-center sm:text-md">{title}</div>
       <p className="text-gray-700 text-sm custom-hidden">
         {description.length > 100
         ? `${description.substring(0, 50)}...`
