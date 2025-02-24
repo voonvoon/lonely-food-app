@@ -1,18 +1,39 @@
-"use client"
+"use client";
 
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import Cookies from "js-cookie";
+import { useSearchParams } from "next/navigation";
 
-export default function Home() {
-  const tableNo = 1;
+function HomeContent() {
+  const searchParams = useSearchParams();
+  const table = searchParams.get("table") || "";
+  const checkin = searchParams.get("checkin") || "";
 
-  const handleDineInClick = () => {
-    const checkinId = generateCheckinId();
-    Cookies.set('checkinId', checkinId, { expires: 1/5 });
-    Cookies.set('tableNo', tableNo.toString(), { expires: 1/5 });
-    window.location.href = `/menu?table=${tableNo}&checkin=${checkinId}`;
-  };
+  useEffect(() => {
+    if (table && checkin) {
+      Cookies.set("checkinId", checkin, { expires: 1 / 5 });
+      if (table) {
+        Cookies.set("tableNo", table, { expires: 1 / 5 });
+      }
+      //checkSessionStatus(checkin);
+    }
+  }, [table, checkin]);
+
+  // const checkSessionStatus = async (checkinId: string) => {
+  //   const response = await fetch(`/api/check-session?checkin=${checkinId}`);
+  //   const data = await response.json();
+  //   if (data.active) {
+  //     window.location.href = `/order-status?checkin=${checkinId}`;
+  //   }
+  // };
+
+  // const handleDineInClick = () => {
+  //   const checkinId = `table${table}checkin`; // Fixed checkin ID for each table
+  //   Cookies.set("checkinId", checkinId, { expires: 1 / 5 });
+  //   Cookies.set("tableNo", table, { expires: 1 / 5 });
+  //   window.location.href = `/menu?table=${table}&checkin=${checkinId}`;
+  // };
 
   return (
     <div
@@ -25,22 +46,28 @@ export default function Home() {
 
       <Link href="/menu">
         <div className="mt-4 px-4 py-2 text-gray-700 text-xl font-semibold rounded-lg hover:bg-gray-700 hover:text-white transition-colors duration-300 bg-white bg-opacity-75 shadow-lg transform hover:scale-105 sm:text-3xl sm:px-8 sm:py-4">
-          Take Away
+          View Menu
         </div>
       </Link>
 
-      <div
+      {/* <div
         onClick={handleDineInClick}
         className="mt-4 px-4 py-2 text-gray-700 text-xl font-semibold rounded-lg hover:bg-gray-700 hover:text-white transition-colors duration-300 bg-white bg-opacity-75 shadow-lg transform hover:scale-105 sm:text-3xl sm:px-8 sm:py-4 cursor-pointer"
       >
         Dine In
-      </div>
+      </div> */}
     </div>
   );
 }
 
-function generateCheckinId() {
-  return Math.random().toString(36).substr(2, 9);
+export default function Home() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <HomeContent />
+    </Suspense>
+  );
 }
 
-
+// function generateCheckinId() {
+//   return Math.random().toString(36).substr(2, 9);
+// }
