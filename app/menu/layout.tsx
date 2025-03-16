@@ -29,6 +29,19 @@ function MenuContent({ children }: MenuProps) {
   const cardNo = searchParams.get("cardno");
   const checkId = searchParams.get("checkid");
   const tableNo = searchParams.get("tableno") || " ";
+  const tableon = searchParams.get("tableon");
+
+  useEffect(() => {
+    if (tableon === "true") {
+      const userConfirmed = window.confirm(
+        "This table is active! press OK If you wish to continue adding orders to this table. Otherwise press CANCEL and scan QR code again in a minute.(wait till they settle the bill)"
+      );
+
+      if (!userConfirmed) {
+        window.location.href = "/"; // Redirect to main page
+      }
+    }
+  }, [tableon]);
 
   if (checkId) {
     //console.log("checkId------------->>", checkId);
@@ -81,7 +94,11 @@ function MenuContent({ children }: MenuProps) {
   }
 
   useEffect(() => {
-    if (cardNo && checkId) {
+    const existingCardNo = Cookies.get("cardNo");
+    const existingDineInUser = Cookies.get("dineInUser");
+    const existingTableNo = Cookies.get("tableNo");
+
+    if (!existingCardNo && !existingDineInUser && !existingTableNo && cardNo && checkId) {
       Cookies.set("cardNo", cardNo, { expires: 1 / 5 });
       Cookies.set("dineInUser", generateUserId(), { expires: 1 / 5 });
       Cookies.set("tableNo", tableNo, { expires: 1 / 5 });

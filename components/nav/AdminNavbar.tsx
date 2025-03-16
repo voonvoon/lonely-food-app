@@ -18,7 +18,8 @@ export default function AdminNavbar() {
       <Link href="/dashboard/admin/orders" className="px-4 py-2 text-gray-700 hover:text-gray-900">Orders</Link>
 
       <Link href="/dashboard/admin/newproducts" className="px-4 py-2 text-gray-700 hover:text-gray-900">All Products</Link>
-      <Link href="/dashboard/admin/orders" className="px-4 py-2 text-gray-700 hover:text-gray-900">Orders</Link>
+      <Link href="/dashboard/admin/orders" className="px-4 py-2 text-gray-700 hover:text-gray-900">Take Aways Orders</Link>
+      <Link href="/dashboard/admin/dine-in" className="px-4 py-2 text-gray-700 hover:text-gray-900">Tables Orders</Link>
     </div>
   );
 }
