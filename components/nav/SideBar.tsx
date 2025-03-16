@@ -1,6 +1,7 @@
 import React, { useEffect, useContext } from "react";
 import { OrderContext } from "@/context/order";
 import { createPaymentLinkPost } from "@/actions/fiuu";
+import { createOrderForTable } from "@/actions/tableOrder";
 import Cookies from "js-cookie";
 
 const Sidebar: React.FC = () => {
@@ -125,8 +126,25 @@ const Sidebar: React.FC = () => {
 
       {dineInUser && tableNo && cardNo ? (
         <button
-          onClick={() => {
-            // Place order function for dine-in
+          onClick={async () => {
+            const handlePlaceOrder = async () => {
+              try {
+                await createOrderForTable(
+                  cartItems,
+                  cardNo,
+                  Number(tableNo),
+                  dineInUser
+                );
+                alert("Order placed successfully!");
+                setCartItems([]);
+                localStorage.removeItem("cartItems");
+              } catch (error) {
+                console.error("Error placing order:", error);
+                alert("Failed to place order. Please try again.");
+              }
+            };
+
+            handlePlaceOrder();
           }}
           className="w-full px-5 py-2 text-lg cursor-pointer bg-green-500 text-white border-none rounded mt-4"
         >

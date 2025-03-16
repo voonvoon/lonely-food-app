@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
         }
 
         // Construct the absolute URL for redirection with the orderId
-        const url = new URL(`/menu?tableno=${table?.table}&cardno=${table?.id}&checkid=${generateRandomCheckIn()}`, req.nextUrl.origin);
+        const url = new URL(`/menu?tableno=${table?.table}&cardno=${table?.id}&checkid=${generateRandomCheckIn()}&tableon=${table?.tableActive}`, req.nextUrl.origin);
 
         // Redirect to the frontend page without passing any data
         return NextResponse.redirect(url.toString(), 303); // The 303 makes client to perform a GET request to the new URL.

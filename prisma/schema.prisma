@@ -181,22 +181,25 @@ model Order {
 }
 
 model TableOrder {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
-  tableId     String @unique
-  orderItems  Json // Structure: {checkinId:[{id, title, price, number}, {...}], checkinId:[{id, title, price, number}, {...}], checkinId:[{id, title, price, number}, {...}]}
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  tableId     String
+  tableNo     Int
+  orderItems  Json // Structure: {dineinUserId:[{id, title, price, number}, {...}], dineinUserId:[{id, title, price, number}, {...}], dineinUserId:[{id, title, price, number}, {...}]}
+  finalOrders Json     @default("[]") // Structure: [{}, {}, ...] //initial with [] avoid bug!
   email       String
   totalAmount Float
-  orderid     String @unique
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  // orderid     String @unique
+  paid        Boolean  @default(false)
+  dineInUser  String[] // Array to store many dinein user id
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 model TableActive {
-  id         String  @id @default(auto()) @map("_id") @db.ObjectId
-  table      Int
-  tableId    String @unique
-  checkinId  String
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  table       Int
+  tableId     String  @unique
+  checkinId   String
   tableActive Boolean @default(false)
 
   createdAt DateTime @default(now())
