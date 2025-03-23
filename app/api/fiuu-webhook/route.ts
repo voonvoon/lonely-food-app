@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import CryptoJS from "crypto-js";
 import querystring from "querystring";
-
+import { printReceipt } from "@/utils/printNode";
 
 import { db } from "@/db";
 
@@ -88,7 +88,19 @@ export async function POST(req: NextRequest) {
       console.log("extraP--------------------------->>>>>", extraP);
 
       //i am about to add a printer function here!
+      // Transform the text to base64
+      const textToPrint =
+        "Every problem has a solution! You are still awesome!";
+      const base64Text = Buffer.from(textToPrint).toString("base64");
 
+      // Test the print function with a dummy printer ID (replace with actual printer ID in production)
+      const printerId = 74207414; // Replace with your actual printer ID
+      try {
+        await printReceipt(printerId, base64Text);
+        console.log("Print job sent successfully!");
+      } catch (error) {
+        console.error("Error sending print job:", error);
+      }
     } else {
       console.log("Transaction failed");
     }
