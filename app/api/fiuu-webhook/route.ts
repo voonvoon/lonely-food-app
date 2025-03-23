@@ -87,6 +87,8 @@ export async function POST(req: NextRequest) {
       //console.log("data--------------------------->>>>>", data);
       console.log("extraP--------------------------->>>>>", extraP);
 
+      //i am about to add a printer function here!
+
     } else {
       console.log("Transaction failed");
     }
