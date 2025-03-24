@@ -89,44 +89,55 @@ export async function POST(req: NextRequest) {
 
       //i am about to add a printer function here!
       // Transform the text to base64
+      const itemsText = data.orderItems
+        .map(
+          (item: { title: string; number: number; price: number }) =>
+            `${item.title.padEnd(12)} ${item.number
+              .toString()
+              .padStart(3)}   $${item.price.toFixed(2)}`
+        )
+        .join("\n");
+
+      const currentDate = new Date();
+      const formattedDate = currentDate.toISOString().split("T")[0]; // Format as YYYY-MM-DD
+      const formattedTime = currentDate.toTimeString().split(" ")[0]; // Format as HH:MM:SS
+
       const textToPrint = `
-\x1B\x40                
-\x1B\x61\x01            
-\x1B\x45\x01            
-The Lonely Food Store\n
-\x1B\x45\x00            
-\x1D\x21\x00            
-\x1B\x21\x01            
-123 Food Street, Foodtown\n
-Phone: +123 456 7890\n
-------------------------\n
-\x1D\x21\x00            
-\x1B\x61\x00            
-Item         Qty   Price\n
-------------------------\n
-Burger        2     $10.00\n
-Fries         1      $3.00\n
-Drink         2      $4.00\n
-Salad         1      $5.00\n
-Ice Cream     1      $2.50\n
-------------------------\n
-Subtotal:            $24.50\n
-Tax (5%):            $1.23\n
-------------------------\n
-Total:              $25.73\n
-------------------------\n
-\x1B\x61\x01            
-\x1B\x21\x01            
-Thank you for visiting!\n
-\x1B\x21\x00            
-\x1B\x61\x00            
-Date: 2025-03-24   Time: 14:30\n
-Receipt #: 12345678\n
-\x1B\x61\x01            
-\x1B\x69                
-
-
-`;
+      \x1B\x40                
+      \x1B\x61\x01            
+      \x1B\x45\x01            
+      The Lonely Food Store\n
+      \x1B\x45\x00            
+      \x1D\x21\x00            
+      \x1B\x21\x01            
+      123 Food Street, Foodtown\n
+      Suite 456, Food Plaza\n
+      Phone: +123 456 7890\n
+      Email: contact@lonelyfoodstore.com\n
+      Website: www.lonelyfoodstore.com\n
+      ------------------------\n
+      \x1D\x21\x00            
+      \x1B\x61\x01            
+      Item         Qty   Price\n
+      ------------------------\n
+      \x1B\x61\x01            
+      ${itemsText}\n
+      ------------------------\n
+      Subtotal:            $${data.amount.toFixed(2)}\n
+      Tax (5%):            $${(data.amount * 0.05).toFixed(2)}\n
+      ------------------------\n
+      Total:              $${(data.amount * 1.05).toFixed(2)}\n
+      ------------------------\n
+      \x1B\x61\x01            
+      \x1B\x21\x01            
+      Thank you for visiting!\n
+      \x1B\x21\x00            
+      \x1B\x61\x00            
+      Date: ${formattedDate}   Time: ${formattedTime}\n
+      Receipt #: ${data.orderid}\n
+      \x1B\x61\x01            
+      \x1B\x69                
+      `;
       const base64Text = Buffer.from(textToPrint).toString("base64");
 
       // Test the print function with a dummy printer ID (replace with actual printer ID in production)
