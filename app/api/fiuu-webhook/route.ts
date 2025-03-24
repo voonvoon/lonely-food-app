@@ -89,8 +89,25 @@ export async function POST(req: NextRequest) {
 
       //i am about to add a printer function here!
       // Transform the text to base64
-      const textToPrint =
-        "Every problem has a solution! You are still awesome!";
+      const textToPrint = `
+\x1B\x40                # Initialize printer
+\x1B\x61\x01            # Center alignment
+Order Receipt\n
+\x1D\x21\x01            # Double-height text
+------------------------\n
+\x1B\x61\x00            # Left alignment
+Item      Qty    Price\n
+------------------------\n
+Burger      2      $10\n
+Fries       1       $3\n
+Drink       2       $4\n
+------------------------\n
+Total:            $17\n
+\x1B\x61\x01            # Center alignment  
+Thank You!\n
+\x1B\x69                # Cut paper
+
+`;
       const base64Text = Buffer.from(textToPrint).toString("base64");
 
       // Test the print function with a dummy printer ID (replace with actual printer ID in production)
