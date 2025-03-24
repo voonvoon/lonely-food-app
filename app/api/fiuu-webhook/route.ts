@@ -87,8 +87,9 @@ export async function POST(req: NextRequest) {
       //console.log("data--------------------------->>>>>", data);
       console.log("extraP--------------------------->>>>>", extraP);
 
-      //i am about to add a printer function here!
-      // Transform the text to base64
+      // Ensure amount is converted to a number
+      const amount = parseFloat(data.amount);
+
       const itemsText = data.extraP.metadata.item
         .map(
           (item: { title: string; number: number; price: number }) =>
@@ -123,10 +124,10 @@ export async function POST(req: NextRequest) {
       \x1B\x61\x01            
       ${itemsText}\n
       ------------------------\n
-      Subtotal:            $${data.amount.toFixed(2)}\n
-      Tax (5%):            $${(data.amount * 0.05).toFixed(2)}\n
+      Subtotal:            $${amount.toFixed(2)}\n
+      Tax (5%):            $${(amount * 0.05).toFixed(2)}\n
       ------------------------\n
-      Total:              $${(data.amount * 1.05).toFixed(2)}\n
+      Total:              $${(amount * 1.05).toFixed(2)}\n
       ------------------------\n
       \x1B\x61\x01            
       \x1B\x21\x01            
