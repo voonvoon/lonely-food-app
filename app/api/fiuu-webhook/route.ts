@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
 
       //i am about to add a printer function here!
       // Transform the text to base64
-      const itemsText = data.orderItems
+      const itemsText = data.extraP.metadata.item
         .map(
           (item: { title: string; number: number; price: number }) =>
             `${item.title.padEnd(12)} ${item.number
