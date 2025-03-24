@@ -90,22 +90,41 @@ export async function POST(req: NextRequest) {
       //i am about to add a printer function here!
       // Transform the text to base64
       const textToPrint = `
-\x1B\x40                # Initialize printer
-\x1B\x61\x01            # Center alignment
-Order Receipt\n
-\x1D\x21\x01            # Double-height text
+\x1B\x40                
+\x1B\x61\x01            
+\x1B\x45\x01            
+The Lonely Food Store\n
+\x1B\x45\x00            
+\x1D\x21\x00            
+\x1B\x21\x01            
+123 Food Street, Foodtown\n
+Phone: +123 456 7890\n
 ------------------------\n
-\x1B\x61\x00            # Left alignment
-Item      Qty    Price\n
+\x1D\x21\x00            
+\x1B\x61\x00            
+Item         Qty   Price\n
 ------------------------\n
-Burger      2      $10\n
-Fries       1       $3\n
-Drink       2       $4\n
+Burger        2     $10.00\n
+Fries         1      $3.00\n
+Drink         2      $4.00\n
+Salad         1      $5.00\n
+Ice Cream     1      $2.50\n
 ------------------------\n
-Total:            $17\n
-\x1B\x61\x01            # Center alignment  
-Thank You!\n
-\x1B\x69                # Cut paper
+Subtotal:            $24.50\n
+Tax (5%):            $1.23\n
+------------------------\n
+Total:              $25.73\n
+------------------------\n
+\x1B\x61\x01            
+\x1B\x21\x01            
+Thank you for visiting!\n
+\x1B\x21\x00            
+\x1B\x61\x00            
+Date: 2025-03-24   Time: 14:30\n
+Receipt #: 12345678\n
+\x1B\x61\x01            
+\x1B\x69                
+
 
 `;
       const base64Text = Buffer.from(textToPrint).toString("base64");
