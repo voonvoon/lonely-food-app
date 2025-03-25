@@ -93,11 +93,20 @@ export async function POST(req: NextRequest) {
       const itemsText = data.extraP.metadata.item
         .map(
           (item: { title: string; number: number; price: number }) =>
-            `${item.title.padEnd(12)} ${item.number
+            `${item.title.padEnd(20)} ${item.number
               .toString()
-              .padStart(3)}   $${item.price.toFixed(2)}`
+              .padStart(5)}   ${item.price.toFixed(2).padStart(8)}`
         )
         .join("\n");
+
+      // const itemsText = data.extraP.metadata.item
+      //   .map(
+      //     (item: { title: string; number: number; price: number }) =>
+      //       `${item.title.padEnd(12)} ${item.number
+      //         .toString()
+      //         .padStart(3)}   $${item.price.toFixed(2)}`
+      //   )
+      //   .join("\n");
 
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split("T")[0]; // Format as YYYY-MM-DD
@@ -110,28 +119,29 @@ export async function POST(req: NextRequest) {
       \x1B\x21\x10            
       The Lonely Food Store
       \x1B\x21\x00            
-      \x1B\x45\x00            
+      \x1B\x45\x00
+      \x1D\x21\x00            
       123 Food Street, Foodtown
       Suite 456, Food Plaza
       Phone: +123 456 7890
       Email: contact@lonelyfoodstore.com
       Website: www.lonelyfoodstore.com
-      ------------------------
-      \x1D\x21\x00           
+      ------------------------         
       \x1B\x61\x01            
-      Item         Qty   Price
+      Item         Qty   Price(RM)
       ------------------------
       ${itemsText}
       ------------------------
-      Subtotal:            $${amount.toFixed(2)}
-      Tax (5%):            $${(amount * 0.05).toFixed(2)}
+      Subtotal:            RM${amount.toFixed(2)}
+      Tax (5%):            RM${(amount * 0.05).toFixed(2)}
       ------------------------
-      Total:              $${(amount * 1.05).toFixed(2)}
+      Total:              RM${(amount * 1.05).toFixed(2)}
       ------------------------
       Thank you for visiting!
       \x1D\x21\x00            
       \x1B\x61\x00           
-      Date: ${formattedDate}   Time: ${formattedTime}
+      Date: ${formattedDate}   
+      Time: ${formattedTime}
       Receipt #: ${data.orderid}
       \x1B\x61\x01            
       \x1B\x69                
