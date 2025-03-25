@@ -114,7 +114,7 @@ export async function POST(req: NextRequest) {
 
       const textToPrint = `
       \x1B\x40                
-      \x1B\x61\x01            
+      \x1B\x61\x00            
       \x1B\x45\x01            
       \x1B\x21\x10            
       The Lonely Food Store
@@ -132,15 +132,15 @@ export async function POST(req: NextRequest) {
       Customer Email: ${data.extraP.metadata.others.email}
       \x1B\x21\x00
       ------------------------
-      \x1B\x61\x01            
-      Item         Qty   Price(RM)
+      \x1B\x61\x00            
+      Item        Qty Price(RM)
       ------------------------
       ${itemsText}
       ------------------------
-      Subtotal:            RM${amount.toFixed(2)}
-      Tax (5%):            RM${(amount * 0.05).toFixed(2)}
+      Subtotal:          RM${amount.toFixed(2)}
+      Tax (5%):          RM${(amount * 0.05).toFixed(2)}
       ------------------------
-      Total:              RM${(amount * 1.05).toFixed(2)}
+      Total:            RM${(amount * 1.05).toFixed(2)}
       ------------------------
       Thank you for visiting!
       \x1D\x21\x00            
