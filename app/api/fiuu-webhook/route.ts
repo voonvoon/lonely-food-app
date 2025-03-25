@@ -93,9 +93,9 @@ export async function POST(req: NextRequest) {
       const itemsText = data.extraP.metadata.item
         .map(
           (item: { title: string; number: number; price: number }) =>
-            `${item.title.padEnd(20)} ${item.number
+            `${item.title.padEnd(10)} ${item.number
               .toString()
-              .padStart(5)}   ${item.price.toFixed(2).padStart(8)}`
+              .padStart(2)}   ${item.price.toFixed(2).padStart(5)}`
         )
         .join("\n");
 
@@ -126,7 +126,12 @@ export async function POST(req: NextRequest) {
       Phone: +123 456 7890
       Email: contact@lonelyfoodstore.com
       Website: www.lonelyfoodstore.com
-      ------------------------         
+      ------------------------  
+       \x1B\x21\x10  
+      Customer Name: ${data.extraP.metadata.others.s_name}
+      Customer Email: ${data.extraP.metadata.others.email}
+      \x1B\x21\x00
+      ------------------------
       \x1B\x61\x01            
       Item         Qty   Price(RM)
       ------------------------
