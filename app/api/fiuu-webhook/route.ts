@@ -107,7 +107,7 @@ export async function POST(req: NextRequest) {
       \x1B\x40                
       \x1B\x61\x01            
       \x1B\x45\x01            
-      \x1B\x21\x30            
+      \x1B\x21\x10            
       The Lonely Food Store
       \x1B\x21\x00            
       \x1B\x45\x00            
@@ -117,7 +117,7 @@ export async function POST(req: NextRequest) {
       Email: contact@lonelyfoodstore.com
       Website: www.lonelyfoodstore.com
       ------------------------
-      \x1D\x21\x01           
+      \x1D\x21\x00           
       \x1B\x61\x01            
       Item         Qty   Price
       ------------------------
