@@ -3,6 +3,7 @@ import CryptoJS from "crypto-js";
 import querystring from "querystring";
 import { printReceipt } from "@/utils/printNode";
 
+
 import { db } from "@/db";
 
 // create a function to create order
@@ -103,42 +104,48 @@ export async function POST(req: NextRequest) {
       const formattedDate = currentDate.toISOString().split("T")[0]; // Format as YYYY-MM-DD
       const formattedTime = currentDate.toTimeString().split(" ")[0]; // Format as HH:MM:SS
 
+      const logoUrl = `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/receipt_logo.bmp`;
+
+      const response = await fetch(logoUrl);
+      const logoBuffer = await response.arrayBuffer();
+      //const logoBase64 = Buffer.from(logoBuffer).toString("base64");
+
       const textToPrint = `
       \x1B\x40                
       \x1B\x61\x01            
+      \x1D\x76\x30\x00        
+     ${Buffer.from(logoBuffer).toString("binary")} 
       \x1B\x45\x01            
-      The Lonely Food Store\n
-      \x1B\x45\x00            
-      \x1D\x21\x00            
-      \x1B\x21\x01            
-      123 Food Street, Foodtown\n
-      Suite 456, Food Plaza\n
-      Phone: +123 456 7890\n
-      Email: contact@lonelyfoodstore.com\n
-      Website: www.lonelyfoodstore.com\n
-      ------------------------\n
-      \x1D\x21\x00            
-      \x1B\x61\x01            
-      Item         Qty   Price\n
-      ------------------------\n
-      \x1B\x61\x01            
-      ${itemsText}\n
-      ------------------------\n
-      Subtotal:            $${amount.toFixed(2)}\n
-      Tax (5%):            $${(amount * 0.05).toFixed(2)}\n
-      ------------------------\n
-      Total:              $${(amount * 1.05).toFixed(2)}\n
-      ------------------------\n
-      \x1B\x61\x01            
-      \x1B\x21\x01            
-      Thank you for visiting!\n
+      \x1B\x21\x30            
+      The Lonely Food Store
       \x1B\x21\x00            
-      \x1B\x61\x00            
-      Date: ${formattedDate}   Time: ${formattedTime}\n
-      Receipt #: ${data.orderid}\n
+      \x1B\x45\x00           
+      123 Food Street, Foodtown
+      Suite 456, Food Plaza
+      Phone: +123 456 7890
+      Email: contact@lonelyfoodstore.com
+      Website: www.lonelyfoodstore.com
+      ------------------------
+      \x1D\x21\x01            
       \x1B\x61\x01            
+      Item         Qty   Price
+      ------------------------
+      ${itemsText}
+      ------------------------
+      Subtotal:            $${amount.toFixed(2)}
+      Tax (5%):            $${(amount * 0.05).toFixed(2)}
+      ------------------------
+      Total:              $${(amount * 1.05).toFixed(2)}
+      ------------------------
+      Thank you for visiting!
+      \x1D\x21\x00            
+      \x1B\x61\x00            
+      Date: ${formattedDate}   Time: ${formattedTime}
+      Receipt #: ${data.orderid}
+      \x1B\x61\x01           
       \x1B\x69                
-      `;
+    `;
+
       const base64Text = Buffer.from(textToPrint).toString("base64");
 
       // Test the print function with a dummy printer ID (replace with actual printer ID in production)
