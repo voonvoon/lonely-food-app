@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import CryptoJS from "crypto-js";
 import querystring from "querystring";
 import { printReceipt } from "@/utils/printNode";
-import iconv from "iconv-lite";
+import iconv from "iconv-lite"; // For encoding text in GB2312(Chinese) format. use it with  \x1B\x52\x15 command
 
 import { db } from "@/db";
 
@@ -94,7 +94,7 @@ export async function POST(req: NextRequest) {
       const itemsText = data.extraP.metadata.item
         .map(
           (item: { title: string; number: number; price: number }) =>
-            `${item.title} ${item.number} ${item.price.toFixed(2)}`
+            `${item.title}    ${item.number}   ${item.price.toFixed(2)}`
         )
         .join("\n");
 
@@ -107,14 +107,7 @@ export async function POST(req: NextRequest) {
       //   )
       //   .join("\n");
 
-      // const itemsText = data.extraP.metadata.item
-      //   .map(
-      //     (item: { title: string; number: number; price: number }) =>
-      //       `${item.title.padEnd(12)} ${item.number
-      //         .toString()
-      //         .padStart(3)}   $${item.price.toFixed(2)}`
-      //   )
-      //   .join("\n");
+
 
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split("T")[0]; // Format as YYYY-MM-DD
@@ -133,18 +126,20 @@ export async function POST(req: NextRequest) {
       123 Food Street, Foodtown
       Suite 456, Food Plaza
       Phone: +123 456 7890
+      \x1B\x4D\x01
       Email:
       contact@lonelyfoodstore.com
       Website:
       www.lonelyfoodstore.com
       测试中文打印
+      \x1B\x4D\x00
       ------------------------  
       \x1B\x21\x10           
       Name: ${data.extraP.metadata.others.s_name}
       Email: ${data.extraP.metadata.others.email}
       \x1B\x21\x00            
       ------------------------
-      \x1B\x61\x01            
+      \x1B\x61\x00            
       Item        Qty Price(RM)
       ------------------------
       ${itemsText}
@@ -154,21 +149,24 @@ export async function POST(req: NextRequest) {
       ------------------------
       Total:            RM${(amount * 1.05).toFixed(2)}
       ------------------------
-      Thank you for visiting!
       \x1D\x21\x00            
       \x1B\x61\x01            
       Date: ${formattedDate}   
       Time: ${formattedTime}
-      Receipt #: ${data.orderid}
+      Receipt #:
+      ${data.orderid}
+      Thank you for visiting!
       \x1B\x61\x01            
       \x1B\x69                
       `;
+
       //const base64Text = Buffer.from(textToPrint).toString("base64");
       //const base64Text = Buffer.from(textToPrint, "utf8").toString("base64"); //use utf8 so can interpret in chinese character
 
       // Encode the text in GB2312
-      const gb2312Buffer = iconv.encode(textToPrint, "gb2312");
-      const base64Text = gb2312Buffer.toString("base64");
+      //both english and chinese character can be printed
+      const gb2312Buffer = iconv.encode(textToPrint, "gb2312"); // Encode the text in GB2312
+      const base64Text = gb2312Buffer.toString("base64"); // Convert the encoded text to base64
       // Test the print function with a dummy printer ID (replace with actual printer ID in production)
       const printerId = 74207414; // Replace with your actual printer ID
       try {
