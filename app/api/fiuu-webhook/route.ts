@@ -94,20 +94,13 @@ export async function POST(req: NextRequest) {
       const itemsText = data.extraP.metadata.item
         .map(
           (item: { title: string; number: number; price: number }) =>
-            `${item.title.padEnd(18)} ${item.number
+            `${item.title.padEnd(10)}${item.number
               .toString()
-              .padStart(2)} ${item.price.toFixed(2).padStart(6)}`
+              .padStart(2)}${item.price.toFixed(2).padStart(6)}`
         )
         .join("\n");
 
-      // const itemsText = data.extraP.metadata.item
-      //   .map(
-      //     (item: { title: string; number: number; price: number }) =>
-      //       `${item.title.padEnd(10)} ${item.number
-      //         .toString()
-      //         .padStart(2)}   ${item.price.toFixed(2).padStart(5)}`
-      //   )
-      //   .join("\n");
+
 
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split("T")[0]; // Format as YYYY-MM-DD
@@ -134,9 +127,8 @@ export async function POST(req: NextRequest) {
       Name: ${data.extraP.metadata.others.s_name}
       Email: ${data.extraP.metadata.others.email}
       \x1B\x21\x00            
-      ------------------------
-      \x1B\x61\x01            
-      Item        Qty Price(RM)
+      ------------------------           
+      Item           Qty Price(RM)
       ------------------------
       ${itemsText}
       ------------------------
