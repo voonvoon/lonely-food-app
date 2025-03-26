@@ -120,7 +120,8 @@ export async function POST(req: NextRequest) {
       const formattedTime = currentDate.toTimeString().split(" ")[0]; // Format as HH:MM:SS
 
       const textToPrint = `
-      \x1B\x40               
+      \x1B\x40
+      \x1B\x52\x15               
       \x1B\x61\x01           
       \x1B\x45\x01           
       \x1B\x21\x10            
@@ -135,6 +136,7 @@ export async function POST(req: NextRequest) {
       contact@lonelyfoodstore.com
       Website:
       www.lonelyfoodstore.com
+      测试中文打印
       ------------------------  
       \x1B\x21\x10           
       Name: ${data.extraP.metadata.others.s_name}
@@ -160,7 +162,8 @@ export async function POST(req: NextRequest) {
       \x1B\x61\x01            
       \x1B\x69                
       `;
-      const base64Text = Buffer.from(textToPrint).toString("base64");
+      //const base64Text = Buffer.from(textToPrint).toString("base64");
+      const base64Text = Buffer.from(textToPrint, "utf8").toString("base64"); //use utf8 so can interpret in chinese character
 
       // Test the print function with a dummy printer ID (replace with actual printer ID in production)
       const printerId = 74207414; // Replace with your actual printer ID
