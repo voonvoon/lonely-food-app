@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import CryptoJS from "crypto-js";
 import querystring from "querystring";
 import { printReceipt } from "@/utils/printNode";
+import iconv from "iconv-lite";
 
 import { db } from "@/db";
 
@@ -163,8 +164,11 @@ export async function POST(req: NextRequest) {
       \x1B\x69                
       `;
       //const base64Text = Buffer.from(textToPrint).toString("base64");
-      const base64Text = Buffer.from(textToPrint, "utf8").toString("base64"); //use utf8 so can interpret in chinese character
+      //const base64Text = Buffer.from(textToPrint, "utf8").toString("base64"); //use utf8 so can interpret in chinese character
 
+      // Encode the text in GB2312
+      const gb2312Buffer = iconv.encode(textToPrint, "gb2312");
+      const base64Text = gb2312Buffer.toString("base64");
       // Test the print function with a dummy printer ID (replace with actual printer ID in production)
       const printerId = 74207414; // Replace with your actual printer ID
       try {
