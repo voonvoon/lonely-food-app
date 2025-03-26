@@ -93,11 +93,18 @@ export async function POST(req: NextRequest) {
       const itemsText = data.extraP.metadata.item
         .map(
           (item: { title: string; number: number; price: number }) =>
-            `${item.title.padEnd(10)} ${item.number
-              .toString()
-              .padStart(2)}   ${item.price.toFixed(2).padStart(5)}`
+            `${item.title} ${item.number} ${item.price.toFixed(2)}`
         )
         .join("\n");
+
+      // const itemsText = data.extraP.metadata.item
+      //   .map(
+      //     (item: { title: string; number: number; price: number }) =>
+      //       `${item.title.padEnd(10)} ${item.number
+      //         .toString()
+      //         .padStart(2)}   ${item.price.toFixed(2).padStart(5)}`
+      //   )
+      //   .join("\n");
 
       // const itemsText = data.extraP.metadata.item
       //   .map(
@@ -113,26 +120,28 @@ export async function POST(req: NextRequest) {
       const formattedTime = currentDate.toTimeString().split(" ")[0]; // Format as HH:MM:SS
 
       const textToPrint = `
-      \x1B\x40                
-      \x1B\x61\x00            
-      \x1B\x45\x01            
+      \x1B\x40               
+      \x1B\x61\x01           
+      \x1B\x45\x01           
       \x1B\x21\x10            
       The Lonely Food Store
-      \x1B\x21\x00            
-      \x1B\x45\x00
+      \x1B\x21\x00           
+      \x1B\x45\x00            
       \x1D\x21\x00            
       123 Food Street, Foodtown
       Suite 456, Food Plaza
       Phone: +123 456 7890
-      Email: contact@lonelyfoodstore.com
-      Website: www.lonelyfoodstore.com
+      Email:
+      contact@lonelyfoodstore.com
+      Website:
+      www.lonelyfoodstore.com
       ------------------------  
-       \x1B\x21\x10  
-      Customer Name: ${data.extraP.metadata.others.s_name}
-      Customer Email: ${data.extraP.metadata.others.email}
-      \x1B\x21\x00
+      \x1B\x21\x10           
+      Name: ${data.extraP.metadata.others.s_name}
+      Email: ${data.extraP.metadata.others.email}
+      \x1B\x21\x00            
       ------------------------
-      \x1B\x61\x00            
+      \x1B\x61\x01            
       Item        Qty Price(RM)
       ------------------------
       ${itemsText}
@@ -144,7 +153,7 @@ export async function POST(req: NextRequest) {
       ------------------------
       Thank you for visiting!
       \x1D\x21\x00            
-      \x1B\x61\x00           
+      \x1B\x61\x01            
       Date: ${formattedDate}   
       Time: ${formattedTime}
       Receipt #: ${data.orderid}
