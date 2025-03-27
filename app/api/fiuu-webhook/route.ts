@@ -92,15 +92,23 @@ export async function POST(req: NextRequest) {
       const amount = parseFloat(data.amount);
 
       const itemsText = data.extraP.metadata.item
-        .map(
-          (item: { title: string; number: number; price: number }) =>
-            `${item.title.padEnd(10)}${item.number
-              .toString()
-              .padStart(2)}${item.price.toFixed(2).padStart(6)}`
-        )
-        .join("\n");
+        .map((item: { title: string; number: number; price: number }) => {
+          // ESC/POS commands for alignment
+          const title = `${item.title}`.padEnd(15); // Left-align the title
+          const qty = `${item.number}`.padStart(3); // Right-align the quantity
+          const price = `${item.price.toFixed(2)}`.padStart(8); // Right-align the price
+          return `\x1B\x61\x00${title}  ${qty}  ${price}`; // Align left for the entire row
+        })
+        .join("\n"); // Add a newline after each row
 
-
+      // const itemsText = data.extraP.metadata.item
+      //   .map(
+      //     (item: { title: string; number: number; price: number }) =>
+      //       `${item.title.padEnd(10)}${item.number
+      //         .toString()
+      //         .padStart(2)}${item.price.toFixed(2).padStart(6)}`
+      //   )
+      //   .join("\n");
 
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split("T")[0]; // Format as YYYY-MM-DD
@@ -128,7 +136,7 @@ export async function POST(req: NextRequest) {
       Email: ${data.extraP.metadata.others.email}
       \x1B\x21\x00            
       ------------------------           
-      Item           Qty Price(RM)
+      Item         Qty Price(RM)
       ------------------------
       ${itemsText}
       ------------------------
