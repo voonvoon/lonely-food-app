@@ -5,7 +5,7 @@ import { printReceipt } from "@/utils/printNode";
 import iconv from "iconv-lite"; // For encoding text in GB2312(Chinese) format. use it with  \x1B\x52\x15 command
 
 import { db } from "@/db";
-import stringWidth from "string-width";
+import stringWidth from "string-width";//accurately calculates the visual width of a string
 
 // create a function to create order
 async function createOrder(data: any) {
@@ -93,7 +93,7 @@ export async function POST(req: NextRequest) {
       const amount = parseFloat(data.amount);
 
       const itemsText = [
-        `\x1B\x61\x00Item     Qty   Price(RM)`, // Header row
+        `\x1B\x61\x01Item       Qty Price(RM)`, // Header row
         `\x1B\x61\x01------------------------`, // Separator line
         ...data.extraP.metadata.item.map(
           (item: { title: string; number: number; price: number }) => {
@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
             const qtyWidth = 3; // Width for the quantity column
             const priceWidth = 8; // Width for the price column
 
-            // Calculate the actual display width of the title
+            //accurately calculates the visual width of a string cuz chinese character has different width
             const actualTitleWidth = stringWidth(item.title);
 
             // Adjust padding dynamically based on the actual width
@@ -115,52 +115,12 @@ export async function POST(req: NextRequest) {
             const price = `${item.price.toFixed(2)}`.padStart(priceWidth);
 
             // Combine columns into a single row
-            return `\x1B\x61\x00${title}${qty}${price}`;
+            return `\x1B\x61\x01${title}${qty}${price}`;
           }
         ),
       ].join("\n"); // Add a newline after each row
 
-      // const itemsText = [
-      //   `\x1B\x61\x00Item     Qty   Price(RM)`, // Header row
-      //   `\x1B\x61\x01------------------------`, // Separator line
-      //   ...data.extraP.metadata.item.map((item: { title: string; number: number; price: number }) => {
-      //     // Define fixed column widths
-      //     const titleWidth = 18; // Width for the title column
-      //     const qtyWidth = 3;    // Width for the quantity column
-      //     const priceWidth = 8; // Width for the price column
-
-      //     // Truncate or pad the title to fit the column width
-      //     const title = item.title.length > titleWidth
-      //       ? item.title.substring(0, titleWidth - 1) + "" // Truncate if too long
-      //       : item.title.padEnd(titleWidth);
-
-      //     // Format quantity and price with fixed widths
-      //     const qty = `${item.number}`.padStart(qtyWidth);
-      //     const price = `${item.price.toFixed(2)}`.padStart(priceWidth);
-
-      //     // Combine columns into a single row
-      //     return `\x1B\x61\x00${title}${qty}${price}`;
-      //   }),
-      // ].join("\n"); // Add a newline after each row
-
-      // const itemsText = data.extraP.metadata.item
-      //   .map((item: { title: string; number: number; price: number }) => {
-      //     // ESC/POS commands for alignment
-      //     const title = `${item.title}`.padEnd(10); // Left-align the title
-      //     const qty = `${item.number}`.padStart(3); // Right-align the quantity
-      //     const price = `${item.price.toFixed(2)}`.padStart(5); // Right-align the price
-      //     return `\x1B\x61\x00${title}${qty}${price}`; // Align left for the entire row
-      //   })
-      //   .join("\n"); // Add a newline after each row
-
-      // const itemsText = data.extraP.metadata.item
-      //   .map(
-      //     (item: { title: string; number: number; price: number }) =>
-      //       `${item.title.padEnd(10)}${item.number
-      //         .toString()
-      //         .padStart(2)}${item.price.toFixed(2).padStart(6)}`
-      //   )
-      //   .join("\n");
+      
 
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split("T")[0]; // Format as YYYY-MM-DD
