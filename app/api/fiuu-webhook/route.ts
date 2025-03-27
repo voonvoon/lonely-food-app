@@ -93,13 +93,13 @@ export async function POST(req: NextRequest) {
       const amount = parseFloat(data.amount);
 
       const itemsText = [
-        `\x1B\x61\x01Item       Qty Price(RM)`, // Header row
+        `\x1B\x61\x00Item         Qty Price(RM)`, // Header row
         `\x1B\x61\x01------------------------`, // Separator line
         ...data.extraP.metadata.item.map(
           (item: { title: string; number: number; price: number }) => {
             const titleWidth = 20; // Desired width for the title column
-            const qtyWidth = 3; // Width for the quantity column
-            const priceWidth = 8; // Width for the price column
+            const qtyWidth = 2; // Width for the quantity column
+            const priceWidth = 7; // Width for the price column
 
             //accurately calculates the visual width of a string cuz chinese character has different width
             const actualTitleWidth = stringWidth(item.title);
