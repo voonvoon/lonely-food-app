@@ -97,7 +97,7 @@ export async function POST(req: NextRequest) {
           const title = `${item.title}`.padEnd(15); // Left-align the title
           const qty = `${item.number}`.padStart(3); // Right-align the quantity
           const price = `${item.price.toFixed(2)}`.padStart(8); // Right-align the price
-          return `\x1B\x61\x00${title}  ${qty}  ${price}`; // Align left for the entire row
+          return `\x1B\x61\x00${title}${qty}${price}`; // Align left for the entire row
         })
         .join("\n"); // Add a newline after each row
 
