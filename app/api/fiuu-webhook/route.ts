@@ -91,17 +91,28 @@ export async function POST(req: NextRequest) {
       // Ensure amount is converted to a number
       const amount = parseFloat(data.amount);
 
-      const itemsText = data.extraP.metadata.item
-        .map((item: { title: string; number: number; price: number }) => {
-          const maxLineWidth = 32; // Adjust based on your printer's character limit per line (e.g., 32 for 58mm paper)
-          const price = `${item.price.toFixed(2)}`.padEnd(8); // Left-align the price
-          const qty = `${item.number}`.padStart(4); // Center-align the quantity
-          const title = `${item.title}`.padStart(
-            maxLineWidth - price.length - qty.length
-          ); // Right-align the title
-          return `${price}${qty}${title}`; // Combine the columns
-        })
-        .join("\n"); // Add a newline after each row
+      const itemsText = [
+        `\x1B\x61\x00Item               Qty   Price(RM)`, // Header row
+        `\x1B\x61\x00--------------------------------`, // Separator line
+        ...data.extraP.metadata.item.map((item: { title: string; number: number; price: number }) => {
+          // Define fixed column widths
+          const titleWidth = 20; // Width for the title column
+          const qtyWidth = 5;    // Width for the quantity column
+          const priceWidth = 10; // Width for the price column
+      
+          // Truncate or pad the title to fit the column width
+          const title = item.title.length > titleWidth
+            ? item.title.substring(0, titleWidth - 1) + "…" // Truncate if too long
+            : item.title.padEnd(titleWidth);
+      
+          // Format quantity and price with fixed widths
+          const qty = `${item.number}`.padStart(qtyWidth);
+          const price = `${item.price.toFixed(2)}`.padStart(priceWidth);
+      
+          // Combine columns into a single row
+          return `\x1B\x61\x00${title}${qty}${price}`;
+        }),
+      ].join("\n"); // Add a newline after each row
 
       // const itemsText = data.extraP.metadata.item
       //   .map((item: { title: string; number: number; price: number }) => {
@@ -148,8 +159,6 @@ export async function POST(req: NextRequest) {
       Email: ${data.extraP.metadata.others.email}
       \x1B\x21\x00            
       ------------------------           
-      Item         Qty Price(RM)
-      ------------------------
       ${itemsText}
       ------------------------
       Subtotal:          RM${amount.toFixed(2)}
