@@ -93,16 +93,16 @@ export async function POST(req: NextRequest) {
 
       const itemsText = [
         `\x1B\x61\x00Item     Qty   Price(RM)`, // Header row
-        `\x1B\x61\x00--------------------------------`, // Separator line
+        `\x1B\x61\x00------------------------`, // Separator line
         ...data.extraP.metadata.item.map((item: { title: string; number: number; price: number }) => {
           // Define fixed column widths
-          const titleWidth = 16; // Width for the title column
-          const qtyWidth = 3;    // Width for the quantity column
-          const priceWidth = 6; // Width for the price column
+          const titleWidth = 20; // Width for the title column
+          const qtyWidth = 6;    // Width for the quantity column
+          const priceWidth = 8; // Width for the price column
       
           // Truncate or pad the title to fit the column width
           const title = item.title.length > titleWidth
-            ? item.title.substring(0, titleWidth - 1) + "…" // Truncate if too long
+            ? item.title.substring(0, titleWidth - 1) + " " // Truncate if too long
             : item.title.padEnd(titleWidth);
       
           // Format quantity and price with fixed widths
