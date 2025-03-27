@@ -5,6 +5,7 @@ import { printReceipt } from "@/utils/printNode";
 import iconv from "iconv-lite"; // For encoding text in GB2312(Chinese) format. use it with  \x1B\x52\x15 command
 
 import { db } from "@/db";
+import stringWidth from "string-width";
 
 // create a function to create order
 async function createOrder(data: any) {
@@ -93,26 +94,54 @@ export async function POST(req: NextRequest) {
 
       const itemsText = [
         `\x1B\x61\x00Item     Qty   Price(RM)`, // Header row
-        `\x1B\x61\x00------------------------`, // Separator line
-        ...data.extraP.metadata.item.map((item: { title: string; number: number; price: number }) => {
-          // Define fixed column widths
-          const titleWidth = 20; // Width for the title column
-          const qtyWidth = 6;    // Width for the quantity column
-          const priceWidth = 8; // Width for the price column
-      
-          // Truncate or pad the title to fit the column width
-          const title = item.title.length > titleWidth
-            ? item.title.substring(0, titleWidth - 1) + " " // Truncate if too long
-            : item.title.padEnd(titleWidth);
-      
-          // Format quantity and price with fixed widths
-          const qty = `${item.number}`.padStart(qtyWidth);
-          const price = `${item.price.toFixed(2)}`.padStart(priceWidth);
-      
-          // Combine columns into a single row
-          return `\x1B\x61\x00${title}${qty}${price}`;
-        }),
+        `\x1B\x61\x01------------------------`, // Separator line
+        ...data.extraP.metadata.item.map(
+          (item: { title: string; number: number; price: number }) => {
+            const titleWidth = 20; // Desired width for the title column
+            const qtyWidth = 3; // Width for the quantity column
+            const priceWidth = 8; // Width for the price column
+
+            // Calculate the actual display width of the title
+            const actualTitleWidth = stringWidth(item.title);
+
+            // Adjust padding dynamically based on the actual width
+            const title =
+              actualTitleWidth > titleWidth
+                ? item.title.substring(0, titleWidth - 1) + "…" // Truncate if too long
+                : item.title + " ".repeat(titleWidth - actualTitleWidth); // Pad with spaces
+
+            // Format quantity and price with fixed widths
+            const qty = `${item.number}`.padStart(qtyWidth);
+            const price = `${item.price.toFixed(2)}`.padStart(priceWidth);
+
+            // Combine columns into a single row
+            return `\x1B\x61\x00${title}${qty}${price}`;
+          }
+        ),
       ].join("\n"); // Add a newline after each row
+
+      // const itemsText = [
+      //   `\x1B\x61\x00Item     Qty   Price(RM)`, // Header row
+      //   `\x1B\x61\x01------------------------`, // Separator line
+      //   ...data.extraP.metadata.item.map((item: { title: string; number: number; price: number }) => {
+      //     // Define fixed column widths
+      //     const titleWidth = 18; // Width for the title column
+      //     const qtyWidth = 3;    // Width for the quantity column
+      //     const priceWidth = 8; // Width for the price column
+
+      //     // Truncate or pad the title to fit the column width
+      //     const title = item.title.length > titleWidth
+      //       ? item.title.substring(0, titleWidth - 1) + "" // Truncate if too long
+      //       : item.title.padEnd(titleWidth);
+
+      //     // Format quantity and price with fixed widths
+      //     const qty = `${item.number}`.padStart(qtyWidth);
+      //     const price = `${item.price.toFixed(2)}`.padStart(priceWidth);
+
+      //     // Combine columns into a single row
+      //     return `\x1B\x61\x00${title}${qty}${price}`;
+      //   }),
+      // ].join("\n"); // Add a newline after each row
 
       // const itemsText = data.extraP.metadata.item
       //   .map((item: { title: string; number: number; price: number }) => {
