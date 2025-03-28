@@ -5,7 +5,7 @@ import { printReceipt } from "@/utils/printNode";
 import iconv from "iconv-lite"; // For encoding text in GB2312(Chinese) format. use it with  \x1B\x52\x15 command
 
 import { db } from "@/db";
-import stringWidth from "string-width";//accurately calculates the visual width of a string
+import stringWidth from "string-width"; //accurately calculates the visual width of a string
 
 // create a function to create order
 async function createOrder(data: any) {
@@ -120,7 +120,16 @@ export async function POST(req: NextRequest) {
         ),
       ].join("\n"); // Add a newline after each row
 
-      
+      // Generate ESC/POS commands for QR code
+      const qrCodeText = "www.google.com";
+      const qrCodeCommand = `
+\x1D\x28\x6B\x03\x00\x31\x43\x08 
+\x1D\x28\x6B\x03\x00\x31\x45\x30 
+\x1D\x28\x6B${String.fromCharCode(
+        qrCodeText.length + 3
+      )}\x00\x31\x50\x30${qrCodeText} 
+\x1D\x28\x6B\x03\x00\x31\x51\x30 
+`;
 
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split("T")[0]; // Format as YYYY-MM-DD
@@ -162,6 +171,8 @@ export async function POST(req: NextRequest) {
       Receipt #:
       ${data.orderid}
       Thank you for visiting!
+      QR Code Test:
+${qrCodeCommand}
       \x1B\x61\x01            
       \x1B\x69                
       `;
