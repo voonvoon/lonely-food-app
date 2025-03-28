@@ -5,8 +5,8 @@ import { printReceipt } from "@/utils/printNode";
 import iconv from "iconv-lite"; // For encoding text in GB2312(Chinese) format. use it with  \x1B\x52\x15 command
 
 import { db } from "@/db";
-import stringWidth from "string-width";//accurately calculates the visual width of a string
-
+import stringWidth from "string-width"; //accurately calculates the visual width of a string
+import QRCode from "qrcode";
 // create a function to create order
 async function createOrder(data: any) {
   try {
@@ -89,9 +89,20 @@ export async function POST(req: NextRequest) {
       //console.log("data--------------------------->>>>>", data);
       console.log("extraP--------------------------->>>>>", extraP);
 
+      // Generate QR code for www.google.com
+      const qrCodeText = "www.google.com";
+      const qrCodeBitmap = await QRCode.toString(qrCodeText, {
+        type: "terminal", // Generates a text-based QR code for testing
+      });
+
+      const qrCodeCommand = `
+      \x1B\x61\x01
+      QR Code:
+      ${qrCodeBitmap}
+      `;
+
       // Ensure amount is converted to a number
       const amount = parseFloat(data.amount);
-
       const itemsText = [
         `\x1B\x61\x00Item         Qty Price(RM)`, // Header row
         `\x1B\x61\x01------------------------`, // Separator line
@@ -99,7 +110,7 @@ export async function POST(req: NextRequest) {
           (item: { title: string; number: number; price: number }) => {
             const titleWidth = 20; // Desired width for the title column
             const qtyWidth = 2; // Width for the quantity column
-            const priceWidth = 7; // Width for the price column
+            const priceWidth = 6; // Width for the price column
 
             //accurately calculates the visual width of a string cuz chinese character has different width
             const actualTitleWidth = stringWidth(item.title);
@@ -107,7 +118,7 @@ export async function POST(req: NextRequest) {
             // Adjust padding dynamically based on the actual width
             const title =
               actualTitleWidth > titleWidth
-                ? item.title.substring(0, titleWidth - 1) + "…" // Truncate if too long
+                ? item.title.substring(0, titleWidth - 1) + "" // Truncate if too long
                 : item.title + " ".repeat(titleWidth - actualTitleWidth); // Pad with spaces
 
             // Format quantity and price with fixed widths
@@ -119,8 +130,6 @@ export async function POST(req: NextRequest) {
           }
         ),
       ].join("\n"); // Add a newline after each row
-
-      
 
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split("T")[0]; // Format as YYYY-MM-DD
@@ -161,6 +170,10 @@ export async function POST(req: NextRequest) {
       Time: ${formattedTime}
       Receipt #:
       ${data.orderid}
+      ------------------------
+  QR Code Test:
+  ${qrCodeCommand}
+  ------------------------
       Thank you for visiting!
       \x1B\x61\x01            
       \x1B\x69                

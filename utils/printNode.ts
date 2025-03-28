@@ -29,27 +29,6 @@ export const printReceipt = async (printerId: number, base64PDF: string) => {
   }
 };
 
-// import { Printer, USB } from 'escpos';
-
-// export const printReceipt = async (printerId: number, receiptContent: string) => {
-//   try {
-//     // Initialize USB connection to the printer
-//     const device = new USB(); // Use the USB adapter provided by escpos
-//     const printer = new Printer(device);
-
-//     device.open(() => {
-//       printer
-//         .text(receiptContent) // Print the receipt content
-//         .cut() // Cut the paper
-//         .close(); // Close the connection
-//     });
-//   } catch (error) {
-//     console.error("Printing error:", error);
-//     throw error;
-//   }
-// };
-
-
 
 // \x1B\x40                # Initialize printer
 // \x1B\x61\x01            # Center alignment
