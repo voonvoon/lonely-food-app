@@ -7,6 +7,8 @@ import iconv from "iconv-lite"; // For encoding text in GB2312(Chinese) format. 
 import { db } from "@/db";
 import stringWidth from "string-width"; //accurately calculates the visual width of a string
 import QRCode from "qrcode";
+import { Jimp } from "jimp";
+
 // create a function to create order
 async function createOrder(data: any) {
   try {
@@ -91,14 +93,34 @@ export async function POST(req: NextRequest) {
 
       // Generate QR code for www.google.com
       const qrCodeText = "www.google.com";
-      const qrCodeBuffer = await QRCode.toBuffer(qrCodeText, { type: "png" });
+      //const qrCodeBuffer = await QRCode.toBuffer(qrCodeText, { type: "png" });
+      const qrCodePngBuffer = await QRCode.toBuffer(qrCodeText, {
+        type: "png",
+      });
+      // Convert PNG to Monochrome Bitmap using Jimp
+      const qrCodeImage = await Jimp.read(qrCodePngBuffer);
+      qrCodeImage.resize({ w: 200, h: 200 }); // Resize to fit the printer's width (adjust as needed)
+      qrCodeImage.greyscale(); // Convert to grayscale
+      // Apply a threshold to convert the image to monochrome (black and white)
+      for (let i = 0; i < qrCodeImage.bitmap.data.length; i += 4) {
+        const grayscaleValue =
+          0.299 * qrCodeImage.bitmap.data[i] + // Red
+          0.587 * qrCodeImage.bitmap.data[i + 1] + // Green
+          0.114 * qrCodeImage.bitmap.data[i + 2]; // Blue
+        const binaryValue = grayscaleValue > 128 ? 255 : 0; // Threshold
+        qrCodeImage.bitmap.data[i] = binaryValue; // Red
+        qrCodeImage.bitmap.data[i + 1] = binaryValue; // Green
+        qrCodeImage.bitmap.data[i + 2] = binaryValue; // Blue
+        qrCodeImage.bitmap.data[i + 3] = 255; // Alpha (fully opaque)
+      }
 
+      const qrCodeBitmap = qrCodeImage.bitmap.data;
+
+      // ESC/POS command to print the bitmap
       const qrCodeCommand = `
-      \x1B\x61\x01
-      QR Code:
-      \x1D\x76\x30\x00${qrCodeBuffer.toString("binary")}
-      `;
-
+  \x1B\x33\x00
+  \x1D\x76\x30\x00${qrCodeBitmap}
+  `;
       // Ensure amount is converted to a number
       const amount = parseFloat(data.amount);
       const itemsText = [
