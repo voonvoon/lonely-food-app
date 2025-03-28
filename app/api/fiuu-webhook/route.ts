@@ -114,13 +114,36 @@ export async function POST(req: NextRequest) {
         qrCodeImage.bitmap.data[i + 3] = 255; // Alpha (fully opaque)
       }
 
-      const qrCodeBitmap = qrCodeImage.bitmap.data;
+      // Convert the image to ESC/POS raster format
+      const width = qrCodeImage.bitmap.width;
+      const height = qrCodeImage.bitmap.height;
+      const bytesPerRow = Math.ceil(width / 8);
+      const rasterData = Buffer.alloc(bytesPerRow * height);
 
-      // ESC/POS command to print the bitmap
-      const qrCodeCommand = `
-  \x1B\x33\x00
-  \x1D\x76\x30\x00${qrCodeBitmap}
-  `;
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          const pixelIndex = (y * width + x) * 4; // RGBA format
+          const byteIndex = Math.floor(x / 8) + y * bytesPerRow;
+          const bitIndex = 7 - (x % 8);
+
+          if (qrCodeImage.bitmap.data[pixelIndex] === 0) {
+            rasterData[byteIndex] |= 1 << bitIndex; // Set the bit for black pixels
+          }
+        }
+      }
+
+      // ESC/POS command to print the raster image
+      const qrCodeCommand = Buffer.concat([
+        Buffer.from("\x1D\x76\x30\x00", "binary"), // Raster image command
+        Buffer.from([
+          bytesPerRow % 256,
+          bytesPerRow >> 8,
+          height % 256,
+          height >> 8,
+        ]), // Width and height
+        rasterData, // Raster data
+      ]);
+      
       // Ensure amount is converted to a number
       const amount = parseFloat(data.amount);
       const itemsText = [
