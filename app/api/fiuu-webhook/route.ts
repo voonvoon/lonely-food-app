@@ -91,14 +91,12 @@ export async function POST(req: NextRequest) {
 
       // Generate QR code for www.google.com
       const qrCodeText = "www.google.com";
-      const qrCodeBitmap = await QRCode.toString(qrCodeText, {
-        type: "terminal", // Generates a text-based QR code for testing
-      });
+      const qrCodeBuffer = await QRCode.toBuffer(qrCodeText, { type: "png" });
 
       const qrCodeCommand = `
       \x1B\x61\x01
       QR Code:
-      ${qrCodeBitmap}
+      \x1D\x76\x30\x00${qrCodeBuffer.toString("binary")}
       `;
 
       // Ensure amount is converted to a number
