@@ -131,7 +131,14 @@ export async function POST(req: NextRequest) {
       )}\x00\x31\x50\x30${qrCodeText} 
 \x1D\x28\x6B\x03\x00\x31\x51\x30 
 `;
-
+//ESC/POS commands are binary instructions sent to the printer. 
+//They must be exactly formatted without any extra characters (like spaces or line breaks).
+//so keep the code as it is.
+      //above command is to create QR code:
+      //1.Set QR Code Size
+      //2.Set Error Correction Level Low(QR still be read even part gets smudged, scratched, or damaged. )
+      //3.Store QR Code Data
+      //4.Print QR Code
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split("T")[0]; // Format as YYYY-MM-DD
       const formattedTime = currentDate.toTimeString().split(" ")[0]; // Format as HH:MM:SS
@@ -173,7 +180,7 @@ export async function POST(req: NextRequest) {
       ${data.orderid}
       Thank you for visiting!
       QR Code Test:
-${qrCodeCommand}
+      ${qrCodeCommand}
       \x1B\x61\x01            
       \x1B\x69                
       `;
@@ -186,7 +193,8 @@ ${qrCodeCommand}
       const gb2312Buffer = iconv.encode(textToPrint, "gb2312"); // Encode the text in GB2312
       const base64Text = gb2312Buffer.toString("base64"); // Convert the encoded text to base64
       // Test the print function with a dummy printer ID (replace with actual printer ID in production)
-      const printerId = 74207414; // Replace with your actual printer ID
+      const printerId = 74228439
+      //const printerId = 74207414; // Replace with your actual printer ID
       try {
         await printReceipt(printerId, base64Text);
         console.log("Print job sent successfully!");
