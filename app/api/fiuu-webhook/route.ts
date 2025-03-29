@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
     if (status === "00") {
       await createOrder(data);
       //console.log("data--------------------------->>>>>", data);
-      console.log("extraP--------------------------->>>>>", extraP);
+      //console.log("extraP--------------------------->>>>>", extraP);
 
       // Ensure amount is converted to a number
       const amount = parseFloat(data.amount);
@@ -127,11 +127,11 @@ export async function POST(req: NextRequest) {
       const qrCodeCommand = `
       \x1D\x28\x6B\x03\x00\x31\x43\x08 
       \x1D\x28\x6B\x03\x00\x31\x45\x30 
-      \x1D\x28\x6B${String.fromCharCode(
-              qrCodeText.length + 3
-            )}\x00\x31\x50\x30${qrCodeText} 
+      \x1D\x28\x6B${String.fromCharCode(qrCodeText.length + 3)}\x00\x31\x50\x30${qrCodeText} 
       \x1D\x28\x6B\x03\x00\x31\x51\x30 
       `;
+
+      console.log("QR Code Command:", qrCodeCommand);
       //above 4 command is to create QR code:
       //1.Set QR Code Size :   \x1D\x28\x6B\x03\x00\x31\x43\x08 
       //2.Set Error Correction Level Low(QR still be read even part gets smudged, scratched, or damaged. )\x1D\x28\x6B\x03\x00\x31\x45\x30 
