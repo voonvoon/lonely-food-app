@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
     if (status === "00") {
       await createOrder(data);
       //console.log("data--------------------------->>>>>", data);
-      //console.log("extraP--------------------------->>>>>", extraP);
+      console.log("extraP--------------------------->>>>>", extraP);
 
       // Ensure amount is converted to a number
       const amount = parseFloat(data.amount);
@@ -122,21 +122,15 @@ export async function POST(req: NextRequest) {
 
       // Generate ESC/POS commands for QR code
       //no need any npm to create cuz modern printer can print QR code directly with escpos command.
-      const qrCodeText = "pelicanwebdev.com"; //no need prefix with https:// or http:// or www.
-
+      const qrCodeText = "pelicanwebdev.com";
       const qrCodeCommand = `
-      \x1D\x28\x6B\x03\x00\x31\x43\x08 
-      \x1D\x28\x6B\x03\x00\x31\x45\x30 
-      \x1D\x28\x6B${String.fromCharCode(qrCodeText.length + 3)}\x00\x31\x50\x30${qrCodeText} 
-      \x1D\x28\x6B\x03\x00\x31\x51\x30 
-      `;
-
-      console.log("QR Code Command:", qrCodeCommand);
-      //above 4 command is to create QR code:
-      //1.Set QR Code Size :   \x1D\x28\x6B\x03\x00\x31\x43\x08 
-      //2.Set Error Correction Level Low(QR still be read even part gets smudged, scratched, or damaged. )\x1D\x28\x6B\x03\x00\x31\x45\x30 
-      //3.Store QR Code Data
-      //4.Print QR Code  \x1D\x28\x6B\x03\x00\x31\x51\x30 
+\x1D\x28\x6B\x03\x00\x31\x43\x08 
+\x1D\x28\x6B\x03\x00\x31\x45\x30 
+\x1D\x28\x6B${String.fromCharCode(
+        qrCodeText.length + 3
+      )}\x00\x31\x50\x30${qrCodeText} 
+\x1D\x28\x6B\x03\x00\x31\x51\x30 
+`;
 
       const currentDate = new Date();
       const formattedDate = currentDate.toISOString().split("T")[0]; // Format as YYYY-MM-DD
@@ -179,7 +173,7 @@ export async function POST(req: NextRequest) {
       ${data.orderid}
       Thank you for visiting!
       QR Code Test:
-      ${qrCodeCommand}
+${qrCodeCommand}
       \x1B\x61\x01            
       \x1B\x69                
       `;
