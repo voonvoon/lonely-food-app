@@ -122,7 +122,7 @@ export async function POST(req: NextRequest) {
 
       // Generate ESC/POS commands for QR code
       //no need any npm to create cuz modern printer can print QR code directly with escpos command.
-      const qrCodeText = "https://pelicanwebdev.com";
+      const qrCodeText = "pelicanwebdev.com"; //no need prefix with https:// or http:// or www.
 
       const qrCodeCommand = `
       \x1D\x28\x6B\x03\x00\x31\x43\x08 
