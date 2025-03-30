@@ -193,8 +193,8 @@ ${qrCodeCommand}
       const gb2312Buffer = iconv.encode(textToPrint, "gb2312"); // Encode the text in GB2312
       const base64Text = gb2312Buffer.toString("base64"); // Convert the encoded text to base64
       // Test the print function with a dummy printer ID (replace with actual printer ID in production)
-      //const printerId = 74228439 // Bluetooth printer ID
-      const printerId = 74228439; // USB printer ID
+      const printerId = 74228458 // Bluetooth printer ID
+      //const printerId = 74228439; // USB printer ID
       try {
         await printReceipt(printerId, base64Text);
         console.log("Print job sent successfully!");
