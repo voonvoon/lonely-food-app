@@ -1,4 +1,4 @@
-
+// random test to fool github
 import axios from "axios";
 
 export const printReceipt = async ( base64PDF: string) => {
