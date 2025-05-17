@@ -18,8 +18,8 @@ const storeTitle = centerText("The Lonely Food Store");
 const address1 = centerText("123 Food Street, Foodtown");
 const address2 = centerText("Suite 456, Food Plaza");
 const phone = centerText("Phone: +123 456 7890");
-const email = centerText("Email:contact@lonelyfoodstore.com");
-const website = centerText("Website:www.lonelyfoodstore.com");
+const email = centerText("contact@lonelyfoodstore.com");
+const website = centerText("www.lonelyfoodstore.com");
 const chineseTest = centerText("测试中文打印");
 
 // create a function to create order
@@ -108,7 +108,7 @@ export async function POST(req: NextRequest) {
       const amount = parseFloat(data.amount);
 
       const itemsText = [
-        `\x1B\x61\x00Item         Qty Price(RM)`, // Header row
+        `\x1B\x61\x00Item                 Qty Price(RM)`, // Header row
         `\x1B\x61\x01---------------------`, // Separator line
         ...data.extraP.metadata.item.map(
           (item: { title: string; number: number; price: number }) => {
@@ -159,7 +159,7 @@ export async function POST(req: NextRequest) {
       const formattedTime = currentDate.toTimeString().split(" ")[0]; // Format as HH:MM:SS
 
       const textToPrint = `
-     \x1B\x40
+\x1B\x40
 \x1B\x52\x15
 \x1B\x61\x00
 \x1B\x45\x01
@@ -175,7 +175,7 @@ ${website}
 ${chineseTest}
 
 ------------------------
-     \x1B\x21\x10
+\x1B\x21\x10
 ${centerText(`Name: ${data.extraP.metadata.others.s_name}`)}
 ${centerText(`Email: ${data.extraP.metadata.others.email}`)}
 \x1B\x21\x00
@@ -189,15 +189,15 @@ ${centerText("---------------------")}
 ${centerText(`Total:             RM${(amount * 1.05).toFixed(2)}`)}
 ${centerText("---------------------")}
 \x1D\x21\x00                 
-       ${centerText(`Date: ${formattedDate}`)}
-      ${centerText(`Time: ${formattedTime}`)}
-      ${centerText("Receipt #:")}
-      ${centerText(data.orderid)}
-      ${centerText("Thank you for visiting!")}
-      QR Code Test:
+${centerText(`Date: ${formattedDate}`)}
+${centerText(`Time: ${formattedTime}`)}
+${centerText("Receipt #:")}
+${centerText(data.orderid)}
+${centerText("Thank you for visiting!")}
+\x1B\x61\x01  
+QR Code Test:
 ${qrCodeCommand}
-      \x1B\x61\x01            
-      \x1B\x69                
+\x1B\x69                
       `;
 
       //const base64Text = Buffer.from(textToPrint).toString("base64");
