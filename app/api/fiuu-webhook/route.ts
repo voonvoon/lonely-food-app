@@ -14,13 +14,6 @@ function centerText(text: string, lineWidth = 32) {
   return " ".repeat(pad > 0 ? pad : 0) + text;
 }
 
-// const storeTitle = centerText("The Lonely Food Store");
-// const address1 = centerText("123 Food Street, Foodtown");
-// const address2 = centerText("Suite 456, Food Plaza");
-// const phone = centerText("Phone: +123 456 7890");
-// const email = centerText("contact@lonelyfoodstore.com");
-// const website = centerText("www.lonelyfoodstore.com");
-// const chineseTest = centerText("测试中文打印");
 
 // create a function to create order
 async function createOrder(data: any) {
@@ -108,7 +101,7 @@ export async function POST(req: NextRequest) {
       const amount = parseFloat(data.amount);
 
       const itemsText = [
-        `\x1B\x61\x00Item              Qty Price(RM)`, // Header row
+        `\x1B\x61\x01Item              Qty Price(RM)`, // Header row
         `\x1B\x61\x01---------------------`, // Separator line
         ...data.extraP.metadata.item.map(
           (item: { title: string; number: number; price: number }) => {
@@ -169,9 +162,9 @@ ${centerText("The Lonely Food Store")}
 ${centerText("123 Food Street, Foodtown")}
 ${centerText("Suite 456, Food Plaza")}
 ${centerText("Phone: +123 456 7890")}
-Email:
+${centerText("Email to:")}
 ${centerText("contact@lonelyfoodstore.com")}
-Website:
+${centerText("Visit us:")}
 ${centerText("www.lonelyfoodstore.com")}
 ${centerText("测试中文打印")}
 ------------------------
