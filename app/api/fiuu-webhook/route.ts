@@ -168,33 +168,32 @@ ${storeTitle}
 \x1D\x21\x00
 ${address1}
 ${address2}
-\x1B\x4D\x01
+
 ${phone}
 ${email}
 ${website}
 ${chineseTest}
-\x1B\x4D\x00
+
 ------------------------
-      \x1B\x21\x10           
-      Name: ${data.extraP.metadata.others.s_name}
-      Email: ${data.extraP.metadata.others.email}
-      \x1B\x21\x00            
-      ---------------------          
-      ${itemsText}
-      ---------------------
-      \x1B\x61\x00
-      Subtotal:          RM${amount.toFixed(2)}
-      Tax (5%):          RM${(amount * 0.05).toFixed(2)}
-      ---------------------
-      Total:            RM${(amount * 1.05).toFixed(2)}
-      ---------------------
-      \x1D\x21\x00            
-      \x1B\x61\x01            
-      Date: ${formattedDate}   
-      Time: ${formattedTime}
-      Receipt #:
-      ${data.orderid}
-      Thank you for visiting!
+     \x1B\x21\x10
+${centerText(`Name: ${data.extraP.metadata.others.s_name}`)}
+${centerText(`Email: ${data.extraP.metadata.others.email}`)}
+\x1B\x21\x00
+${centerText("---------------------")}
+${itemsText}
+${centerText("---------------------")}
+\x1B\x61\x00
+${centerText(`Subtotal:          RM${amount.toFixed(2)}`)}
+${centerText(`Tax (5%):          RM${(amount * 0.05).toFixed(2)}`)}
+${centerText("---------------------")}
+${centerText(`Total:             RM${(amount * 1.05).toFixed(2)}`)}
+${centerText("---------------------")}
+\x1D\x21\x00                 
+       ${centerText(`Date: ${formattedDate}`)}
+      ${centerText(`Time: ${formattedTime}`)}
+      ${centerText("Receipt #:")}
+      ${centerText(data.orderid)}
+      ${centerText("Thank you for visiting!")}
       QR Code Test:
 ${qrCodeCommand}
       \x1B\x61\x01            
