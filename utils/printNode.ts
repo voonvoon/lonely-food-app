@@ -1,23 +1,17 @@
+
 import axios from "axios";
 
-const PRINTNODE_API_KEY = process.env.NEXT_PUBLIC_PRINTNODE_API_KEY; 
-
-export const printReceipt = async (printerId: number, base64PDF: string) => {
+export const printReceipt = async ( base64PDF: string) => {
   try {
+    // Convert base64 string to a Buffer for binary transfer
+    const buffer = Buffer.from(base64PDF, "base64");
+
     const response = await axios.post(
-      "https://api.printnode.com/printjobs",
+      "http://157.245.192.130:3000/print",
+      buffer,
       {
-        printerId,
-        title: "Order Receipt",
-        //contentType: "pdf_base64",
-        contentType: "raw_base64",
-        content: base64PDF, // Must be a base64-encoded PDF
-        source: "Next.js App",
-      },
-      {
-        auth: {
-          username: PRINTNODE_API_KEY!,
-          password: "", // PrintNode uses basic auth, but only the API key is needed, it stay to satisfy ts
+        headers: {
+          "Content-Type": "application/octet-stream",
         },
       }
     );
@@ -28,6 +22,35 @@ export const printReceipt = async (printerId: number, base64PDF: string) => {
     throw error;
   }
 };
+
+// const PRINTNODE_API_KEY = process.env.NEXT_PUBLIC_PRINTNODE_API_KEY; 
+
+// export const printReceipt = async (printerId: number, base64PDF: string) => {
+//   try {
+//     const response = await axios.post(
+//       "https://api.printnode.com/printjobs",
+//       {
+//         printerId,
+//         title: "Order Receipt",
+//         //contentType: "pdf_base64",
+//         contentType: "raw_base64",
+//         content: base64PDF, // Must be a base64-encoded PDF
+//         source: "Next.js App",
+//       },
+//       {
+//         auth: {
+//           username: PRINTNODE_API_KEY!,
+//           password: "", // PrintNode uses basic auth, but only the API key is needed, it stay to satisfy ts
+//         },
+//       }
+//     );
+
+//     return response.data;
+//   } catch (error) {
+//     console.error("Printing error:", error);
+//     throw error;
+//   }
+// };
 
 
 // \x1B\x40                # Initialize printer
