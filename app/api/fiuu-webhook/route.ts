@@ -7,6 +7,21 @@ import iconv from "iconv-lite"; // For encoding text in GB2312(Chinese) format. 
 import { db } from "@/db";
 import stringWidth from "string-width"; //accurately calculates the visual width of a string
 
+// Add this helper function near the top of your file
+function centerText(text: string, lineWidth = 32) {
+  const width = stringWidth(text);
+  const pad = Math.floor((lineWidth - width) / 2);
+  return " ".repeat(pad > 0 ? pad : 0) + text;
+}
+
+const storeTitle = centerText("The Lonely Food Store");
+const address1 = centerText("123 Food Street, Foodtown");
+const address2 = centerText("Suite 456, Food Plaza");
+const phone = centerText("Phone: +123 456 7890");
+const email = centerText("Email:contact@lonelyfoodstore.com");
+const website = centerText("Website:www.lonelyfoodstore.com");
+const chineseTest = centerText("测试中文打印");
+
 // create a function to create order
 async function createOrder(data: any) {
   try {
@@ -94,7 +109,7 @@ export async function POST(req: NextRequest) {
 
       const itemsText = [
         `\x1B\x61\x00Item         Qty Price(RM)`, // Header row
-        `\x1B\x61\x01------------------------`, // Separator line
+        `\x1B\x61\x01---------------------`, // Separator line
         ...data.extraP.metadata.item.map(
           (item: { title: string; number: number; price: number }) => {
             const titleWidth = 20; // Desired width for the title column
@@ -131,9 +146,9 @@ export async function POST(req: NextRequest) {
       )}\x00\x31\x50\x30${qrCodeText} 
 \x1D\x28\x6B\x03\x00\x31\x51\x30 
 `;
-//ESC/POS commands are binary instructions sent to the printer. 
-//They must be exactly formatted without any extra characters (like spaces or line breaks).
-//so keep the code as it is.
+      //ESC/POS commands are binary instructions sent to the printer.
+      //They must be exactly formatted without any extra characters (like spaces or line breaks).
+      //so keep the code as it is.
       //above command is to create QR code:
       //1.Set QR Code Size
       //2.Set Error Correction Level Low(QR still be read even part gets smudged, scratched, or damaged. )
@@ -144,34 +159,35 @@ export async function POST(req: NextRequest) {
       const formattedTime = currentDate.toTimeString().split(" ")[0]; // Format as HH:MM:SS
 
       const textToPrint = `
-      \x1B\x40
-      \x1B\x52\x15               
-      \x1B\x61\x01           
-      \x1B\x45\x01                      
-      The Lonely Food Store          
-      \x1B\x45\x00            
-      \x1D\x21\x00            
-      123 Food Street, Foodtown
-      Suite 456, Food Plaza
-      \x1B\x4D\x01
-      Phone: +123 456 7890
-      Email:contact@lonelyfoodstore.com
-      Website:www.lonelyfoodstore.com
-      测试中文打印
-      \x1B\x4D\x00
-      ------------------------  
+     \x1B\x40
+\x1B\x52\x15
+\x1B\x61\x00
+\x1B\x45\x01
+${storeTitle}
+\x1B\x45\x00
+\x1D\x21\x00
+${address1}
+${address2}
+\x1B\x4D\x01
+${phone}
+${email}
+${website}
+${chineseTest}
+\x1B\x4D\x00
+------------------------
       \x1B\x21\x10           
       Name: ${data.extraP.metadata.others.s_name}
       Email: ${data.extraP.metadata.others.email}
       \x1B\x21\x00            
-      ------------------------           
+      ---------------------          
       ${itemsText}
-      ------------------------
+      ---------------------
+      \x1B\x61\x00
       Subtotal:          RM${amount.toFixed(2)}
       Tax (5%):          RM${(amount * 0.05).toFixed(2)}
-      ------------------------
+      ---------------------
       Total:            RM${(amount * 1.05).toFixed(2)}
-      ------------------------
+      ---------------------
       \x1D\x21\x00            
       \x1B\x61\x01            
       Date: ${formattedDate}   
