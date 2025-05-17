@@ -14,13 +14,13 @@ function centerText(text: string, lineWidth = 32) {
   return " ".repeat(pad > 0 ? pad : 0) + text;
 }
 
-const storeTitle = centerText("The Lonely Food Store");
-const address1 = centerText("123 Food Street, Foodtown");
-const address2 = centerText("Suite 456, Food Plaza");
-const phone = centerText("Phone: +123 456 7890");
-const email = centerText("contact@lonelyfoodstore.com");
-const website = centerText("www.lonelyfoodstore.com");
-const chineseTest = centerText("测试中文打印");
+// const storeTitle = centerText("The Lonely Food Store");
+// const address1 = centerText("123 Food Street, Foodtown");
+// const address2 = centerText("Suite 456, Food Plaza");
+// const phone = centerText("Phone: +123 456 7890");
+// const email = centerText("contact@lonelyfoodstore.com");
+// const website = centerText("www.lonelyfoodstore.com");
+// const chineseTest = centerText("测试中文打印");
 
 // create a function to create order
 async function createOrder(data: any) {
@@ -108,7 +108,7 @@ export async function POST(req: NextRequest) {
       const amount = parseFloat(data.amount);
 
       const itemsText = [
-        `\x1B\x61\x00Item                 Qty Price(RM)`, // Header row
+        `\x1B\x61\x00Item              Qty Price(RM)`, // Header row
         `\x1B\x61\x01---------------------`, // Separator line
         ...data.extraP.metadata.item.map(
           (item: { title: string; number: number; price: number }) => {
@@ -163,17 +163,17 @@ export async function POST(req: NextRequest) {
 \x1B\x52\x15
 \x1B\x61\x00
 \x1B\x45\x01
-${storeTitle}
+${centerText("The Lonely Food Store")}
 \x1B\x45\x00
 \x1D\x21\x00
-${address1}
-${address2}
-
-${phone}
-${email}
-${website}
-${chineseTest}
-
+${centerText("123 Food Street, Foodtown")}
+${centerText("Suite 456, Food Plaza")}
+${centerText("Phone: +123 456 7890")}
+Email:
+${centerText("contact@lonelyfoodstore.com")}
+Website:
+${centerText("www.lonelyfoodstore.com")}
+${centerText("测试中文打印")}
 ------------------------
 \x1B\x21\x10
 ${centerText(`Name: ${data.extraP.metadata.others.s_name}`)}
@@ -181,7 +181,6 @@ ${centerText(`Email: ${data.extraP.metadata.others.email}`)}
 \x1B\x21\x00
 ${centerText("---------------------")}
 ${itemsText}
-${centerText("---------------------")}
 \x1B\x61\x00
 ${centerText(`Subtotal:          RM${amount.toFixed(2)}`)}
 ${centerText(`Tax (5%):          RM${(amount * 0.05).toFixed(2)}`)}
@@ -193,9 +192,9 @@ ${centerText(`Date: ${formattedDate}`)}
 ${centerText(`Time: ${formattedTime}`)}
 ${centerText("Receipt #:")}
 ${centerText(data.orderid)}
-${centerText("Thank you for visiting!")}
+${centerText("Thank you for your visiting!")}
 \x1B\x61\x01  
-QR Code Test:
+QR Code:
 ${qrCodeCommand}
 \x1B\x69                
       `;
