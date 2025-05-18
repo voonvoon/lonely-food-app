@@ -7,10 +7,11 @@ import iconv from "iconv-lite"; // For encoding text in GB2312(Chinese) format. 
 import { db } from "@/db";
 import stringWidth from "string-width"; //accurately calculates the visual width of a string
 
-// Add this helper function near the top of your file
+
+//to center the text in the receipt,use string-width library to accurately cal the width of string
 function centerText(text: string, lineWidth = 32) {
-  const width = stringWidth(text);
-  const pad = Math.floor((lineWidth - width) / 2);
+  const width = stringWidth(text);//Eng letters, 1 letter = 1 width ; 'hello' = 5 width
+  const pad = Math.floor((lineWidth - width) / 2); //e,g'hello' = 5 width, so 32-5=27/2=13.5, so 13 space before and 14 space after
   return " ".repeat(pad > 0 ? pad : 0) + text;
 }
 
@@ -101,7 +102,7 @@ export async function POST(req: NextRequest) {
       const amount = parseFloat(data.amount);
 
       const itemsText = [
-        `\x1B\x61\x01Item              Qty Price(RM)`, // Header row
+        `\x1B\x61\x01Item          Qty     Price(RM)`, // Header row
         `\x1B\x61\x01---------------------`, // Separator line
         ...data.extraP.metadata.item.map(
           (item: { title: string; number: number; price: number }) => {
@@ -167,7 +168,7 @@ ${centerText("contact@lonelyfoodstore.com")}
 ${centerText("Visit us:")}
 ${centerText("www.lonelyfoodstore.com")}
 ${centerText("测试中文打印")}
-------------------------
+${centerText("---------------------")}
 \x1B\x21\x10
 ${centerText(`Name: ${data.extraP.metadata.others.s_name}`)}
 ${centerText(`Email: ${data.extraP.metadata.others.email}`)}
@@ -175,10 +176,10 @@ ${centerText(`Email: ${data.extraP.metadata.others.email}`)}
 ${centerText("---------------------")}
 ${itemsText}
 \x1B\x61\x00
-${centerText(`Subtotal:          RM${amount.toFixed(2)}`)}
-${centerText(`Tax (5%):          RM${(amount * 0.05).toFixed(2)}`)}
+${centerText(`Subtotal:            RM${amount.toFixed(2)}`)}
+${centerText(`Tax (5%):            RM${(amount * 0.05).toFixed(2)}`)}
 ${centerText("---------------------")}
-${centerText(`Total:             RM${(amount * 1.05).toFixed(2)}`)}
+${centerText(`Total:               RM${(amount * 1.05).toFixed(2)}`)}
 ${centerText("---------------------")}
 \x1D\x21\x00                 
 ${centerText(`Date: ${formattedDate}`)}
@@ -191,17 +192,10 @@ QR Code:
 ${qrCodeCommand}
 \x1B\x69                
       `;
-
-      //const base64Text = Buffer.from(textToPrint).toString("base64");
-      //const base64Text = Buffer.from(textToPrint, "utf8").toString("base64"); //use utf8 so can interpret in chinese character
-
       // Encode the text in GB2312
       //both english and chinese character can be printed
       const gb2312Buffer = iconv.encode(textToPrint, "gb2312"); // Encode the text in GB2312
       const base64Text = gb2312Buffer.toString("base64"); // Convert the encoded text to base64
-      // Test the print function with a dummy printer ID (replace with actual printer ID in production)
-      //const printerId = 74230035 // Bluetooth printer ID
-      //const printerId = 74228439; // USB printer ID
       try {
         await printReceipt(base64Text);
         console.log("Print job sent successfully!");
